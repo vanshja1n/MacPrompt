@@ -1,6 +1,7 @@
 <div align="center">
 
 <img src="icon.png" alt="MacPrompt" width="120">
+</div>
 
 # MacPrompt
 
