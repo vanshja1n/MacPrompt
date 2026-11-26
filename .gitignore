@@ -1,0 +1,16 @@
+# Xcode
+DerivedData/
+build/
+*.xcuserstate
+xcuserdata/
+
+# macOS
+.DS_Store
+
+# Release packages
+*.zip
+*.dmg
+
+# Environment / secrets
+.env
+.env.*
