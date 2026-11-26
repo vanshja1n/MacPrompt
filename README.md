@@ -1,3 +1,7 @@
+<div align="center">
+
+<img src="icon.png" alt="MacPrompt" width="120">
+
 # MacPrompt
 
 **A native macOS teleprompter that keeps your words right where you look.**
