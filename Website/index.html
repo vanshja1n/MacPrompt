@@ -1,0 +1,4216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Primary SEO Metadata -->
+  <title>MacPrompt — Native macOS Teleprompter</title>
+  <meta name="description" content="MacPrompt is a native macOS teleprompter that lives in your MacBook notch, runs quietly from the menu bar, and hides from screen recording. Smooth auto-scroll, voice-coupled prompting, hover-to-pause, and script library. One-time purchase for ₹299." />
+  <meta name="keywords" content="macOS teleprompter, Mac teleprompter, MacBook notch teleprompter, hide from screen recording, menu bar teleprompter" />
+  <link rel="canonical" href="https://macprompt.vercel.app/" />
+  <meta name="theme-color" content="#F7F5F0" />
+
+  <!-- Open Graph Metadata -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://macprompt.vercel.app/" />
+  <meta property="og:title" content="MacPrompt — Native macOS Teleprompter" />
+  <meta property="og:description" content="Your words. Right where you look. A native macOS notch teleprompter that runs from your menu bar and hides from screen recording. One-time purchase for ₹299." />
+  <meta property="og:site_name" content="MacPrompt" />
+
+  <!-- Twitter / X Metadata -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="MacPrompt — Native macOS Teleprompter" />
+  <meta name="twitter:description" content="A native macOS notch teleprompter that hides from screen recording for exams, interviews, presentations, meetings, and video recording. One-time purchase for ₹299." />
+
+  <!-- Favicon & Apple Touch Icon -->
+  <link rel="icon" type="image/png" href="icon.png" />
+  <link rel="apple-touch-icon" href="icon.png" />
+
+  <!-- Structured Data: SoftwareApplication (Strict accuracy, no fake ratings) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "MacPrompt",
+    "applicationCategory": "ProductivityApplication",
+    "operatingSystem": "macOS",
+    "description": "A native macOS notch teleprompter and menu bar app with privacy mode to hide from screen captures, smooth auto-scroll, voice-coupled prompting, hover-to-pause, multi-display support, and local script library with TXT, Markdown, RTF, DOCX, ODT, and PDF import and export.",
+    "offers": {
+      "@type": "Offer",
+      "price": "299",
+      "priceCurrency": "INR",
+      "availability": "https://schema.org/InStock"
+    }
+  }
+  </script>
+
+  <!-- Typography: Plus Jakarta Sans + JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <style>
+    /* =========================================================================
+       1. DESIGN TOKENS & BASE RESET
+    ========================================================================= */
+    :root {
+      --cream: #F7F5F0;
+      --white: #FFFFFF;
+      --obsidian: #111315;
+      --obsidian-card: #1A1D21;
+      --obsidian-border: #2A2E35;
+      --orange: #FF6B2C;
+      --orange-dark: #E85A22;
+      --orange-soft: rgba(255, 107, 44, 0.09);
+      --orange-ring: rgba(255, 107, 44, 0.28);
+
+      --ink: #111315;
+      --ink-secondary: #565B63;
+      --ink-muted: #7C818A;
+
+      --border: #E6E1D7;
+      --border-subtle: rgba(17, 19, 21, 0.08);
+      --footer-divider: #262A30;
+
+      --font-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", sans-serif;
+      --font-mono: "JetBrains Mono", "SF Mono", ui-monospace, Menlo, monospace;
+
+      --container: 1080px;
+      --radius-xl: 24px;
+      --radius-lg: 20px;
+      --radius-md: 14px;
+      --radius-sm: 10px;
+      --radius-pill: 999px;
+
+      --shadow-card: 0 14px 34px -20px rgba(31, 26, 18, 0.14), 0 2px 6px -2px rgba(31, 26, 18, 0.05);
+      --shadow-dock: 0 12px 28px -16px rgba(31, 26, 18, 0.14), 0 1px 3px rgba(31, 26, 18, 0.05);
+      --shadow-mac: 0 40px 84px -24px rgba(17, 19, 21, 0.30), 0 14px 30px -12px rgba(17, 19, 21, 0.16);
+      --shadow-cta: 0 10px 22px -8px rgba(255, 107, 44, 0.50), 0 2px 6px -1px rgba(255, 107, 44, 0.24);
+      --ease: cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+      margin: 0;
+      background-color: var(--cream);
+      color: var(--ink);
+      font-family: var(--font-sans);
+      font-size: 16px;
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+    }
+
+    h1, h2, h3, h4 {
+      margin: 0;
+      font-family: var(--font-sans);
+      color: var(--ink);
+      letter-spacing: -0.036em;
+    }
+
+    p {
+      margin: 0;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      font: inherit;
+      color: inherit;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--orange);
+      outline-offset: 3px;
+      border-radius: 6px;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .skip-link:focus {
+      position: fixed;
+      top: 12px;
+      left: 12px;
+      z-index: 100;
+      width: auto;
+      height: auto;
+      clip: auto;
+      padding: 10px 16px;
+      background: var(--obsidian);
+      color: var(--white);
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .container {
+      width: 100%;
+      max-width: var(--container);
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    .accent {
+      color: var(--orange);
+    }
+
+    .section {
+      padding: 56px 0;
+    }
+
+    section[id] {
+      scroll-margin-top: 72px;
+    }
+
+    .section-divider {
+      border-top: 1px solid var(--border);
+    }
+
+    .eyebrow-label {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 10px;
+    }
+
+    .section-title {
+      font-size: clamp(28px, 4.4vw, 42px);
+      font-weight: 800;
+      line-height: 1.07;
+      letter-spacing: -0.04em;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border-radius: var(--radius-pill);
+      font-weight: 600;
+      font-size: 15px;
+      letter-spacing: -0.012em;
+      padding: 13px 24px;
+      min-height: 46px;
+      white-space: nowrap;
+      transition: transform 180ms var(--ease), background-color 180ms ease, box-shadow 180ms ease, border-color 180ms ease, color 180ms ease;
+    }
+
+    .btn-primary {
+      background: var(--orange);
+      color: var(--white);
+      box-shadow: var(--shadow-cta);
+    }
+
+    .btn-primary:hover {
+      background: var(--orange-dark);
+      transform: translateY(-1px);
+      box-shadow: 0 14px 26px -8px rgba(232, 90, 34, 0.54), 0 3px 8px -2px rgba(232, 90, 34, 0.28);
+    }
+
+    .btn-primary:active {
+      transform: translateY(0);
+    }
+
+    .btn-secondary {
+      background: var(--white);
+      color: var(--ink);
+      border: 1px solid var(--border);
+      box-shadow: 0 2px 6px -2px rgba(31, 26, 18, 0.05);
+    }
+
+    .btn-secondary:hover {
+      border-color: #CFC8BA;
+      background: #FCFBF9;
+      transform: translateY(-1px);
+    }
+
+    .btn-sm {
+      font-size: 13.5px;
+      padding: 9px 17px;
+      min-height: 38px;
+    }
+
+    /* =========================================================================
+       2. STICKY MINIMAL NAVBAR
+    ========================================================================= */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 60;
+      background: rgba(247, 245, 240, 0.88);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .navbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+      gap: 16px;
+    }
+
+    .brand-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      font-size: 16.5px;
+      letter-spacing: -0.03em;
+      color: var(--ink);
+      flex-shrink: 0;
+    }
+
+    .brand-icon {
+      display: block;
+      flex-shrink: 0;
+      object-fit: cover;
+      border-radius: 7px;
+      filter: drop-shadow(0 3px 7px rgba(17, 19, 21, 0.18));
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 26px;
+      flex-shrink: 0;
+    }
+
+    .nav-links {
+      display: none;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .nav-link {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink-secondary);
+      transition: color 150ms ease;
+    }
+
+    .nav-link:hover {
+      color: var(--ink);
+    }
+
+    /* =========================================================================
+       3. HERO SECTION
+    ========================================================================= */
+    .hero {
+      padding: 44px 0 32px;
+      text-align: center;
+    }
+
+    .hero-inner {
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .eyebrow-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 13px;
+      border-radius: var(--radius-pill);
+      background: var(--white);
+      border: 1px solid var(--border);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ink-secondary);
+      box-shadow: 0 2px 8px -4px rgba(31, 26, 18, 0.08);
+    }
+
+    .pulse-dot {
+      position: relative;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--orange);
+      flex-shrink: 0;
+    }
+
+    .pulse-dot::after {
+      content: "";
+      position: absolute;
+      inset: -3px;
+      border-radius: 50%;
+      background: rgba(255, 107, 44, 0.35);
+      animation: softPulse 2.4s ease-out infinite;
+    }
+
+    @keyframes softPulse {
+      0% { transform: scale(0.8); opacity: 0.75; }
+      70% { transform: scale(1.75); opacity: 0; }
+      100% { transform: scale(1.75); opacity: 0; }
+    }
+
+    .hero-title {
+      margin-top: 20px;
+      font-size: clamp(40px, 7.8vw, 72px);
+      font-weight: 800;
+      line-height: 1.02;
+      letter-spacing: -0.045em;
+    }
+
+    .hero-copy {
+      margin: 20px auto 0;
+      max-width: 600px;
+      font-size: clamp(15.5px, 2vw, 18px);
+      line-height: 1.62;
+      color: var(--ink-secondary);
+    }
+
+    .hero-actions {
+      margin-top: 28px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .hero-trust {
+      margin-top: 14px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--ink-muted);
+    }
+
+    /* Subtle Hero Entrance */
+    .hero-anim {
+      opacity: 0;
+      transform: translateY(10px);
+      animation: fadeUp 520ms var(--ease) forwards;
+    }
+    .hero-anim-2 { animation-delay: 55ms; }
+    .hero-anim-3 { animation-delay: 110ms; }
+    .hero-anim-4 { animation-delay: 165ms; }
+
+    @keyframes fadeUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* =========================================================================
+       4. INTERACTIVE MACBOOK PRO NOTCH SHOWCASE (#how-it-works)
+    ========================================================================= */
+    .showcase-section {
+      padding: 12px 0 64px;
+    }
+
+    .macbook-stage {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    .macbook-bezel {
+      position: relative;
+      background: linear-gradient(180deg, #25282E 0%, #101215 100%);
+      padding: 8px;
+      border-radius: 22px;
+      box-shadow: var(--shadow-mac), inset 0 1px 0 rgba(255, 255, 255, 0.16), 0 0 0 1px rgba(17, 19, 21, 0.25);
+    }
+
+    .macbook-screen {
+      position: relative;
+      border-radius: 14px;
+      overflow: hidden;
+      aspect-ratio: 16 / 11.2;
+      background:
+        radial-gradient(ellipse 80% 65% at 14% 92%, rgba(255, 107, 44, 0.20), transparent 62%),
+        radial-gradient(ellipse 68% 58% at 86% 18%, rgba(235, 223, 206, 0.15), transparent 65%),
+        linear-gradient(160deg, #272421 0%, #191817 52%, #121315 100%);
+      display: flex;
+      flex-direction: column;
+      user-select: none;
+    }
+
+    /* Realistic macOS Menu Bar */
+    .mac-menubar {
+      position: relative;
+      z-index: 25;
+      height: 28px;
+      padding: 0 14px;
+      background: rgba(14, 15, 18, 0.72);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.90);
+    }
+
+    .mac-menubar-left,
+    .mac-menubar-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .mac-menu-bold {
+      font-weight: 600;
+      color: #FFFFFF;
+    }
+
+    .mac-menu-item {
+      display: none;
+      color: rgba(255, 255, 255, 0.65);
+      font-weight: 400;
+    }
+
+    .mac-rec-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 2px 7px;
+      border-radius: var(--radius-pill);
+      background: rgba(255, 107, 44, 0.22);
+      border: 1px solid rgba(255, 107, 44, 0.55);
+      color: #FF9466;
+      font-size: 9.5px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      opacity: 0;
+      transform: scale(0.92);
+      pointer-events: none;
+      transition: opacity 220ms ease, transform 220ms var(--ease);
+    }
+
+    .mac-rec-pill.is-active {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .mac-rec-pill-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: #FF4D2E;
+      box-shadow: 0 0 6px rgba(255, 77, 46, 0.9);
+    }
+
+    .mac-mp-tray {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 18px;
+      height: 18px;
+      border-radius: 4px;
+      background: rgba(255, 107, 44, 0.16);
+      transition: opacity 220ms ease;
+    }
+
+    .mac-battery {
+      display: none;
+      align-items: center;
+      gap: 1.5px;
+    }
+
+    .mac-battery-body {
+      width: 18px;
+      height: 9px;
+      border: 1px solid rgba(255, 255, 255, 0.65);
+      border-radius: 2.5px;
+      padding: 1.2px;
+    }
+
+    .mac-battery-fill {
+      width: 82%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.92);
+      border-radius: 1px;
+    }
+
+    .mac-battery-cap {
+      width: 1.5px;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.55);
+      border-radius: 0 1px 1px 0;
+    }
+
+    /* Hardware MacBook Notch + Camera Lens + Green LED */
+    .mac-notch {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120px;
+      height: 24px;
+      background: #060608;
+      border-radius: 0 0 12px 12px;
+      z-index: 40;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .mac-camera {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #171A20;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.14);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .mac-camera::after {
+      content: "";
+      width: 3.5px;
+      height: 3.5px;
+      border-radius: 50%;
+      background: #2D3540;
+    }
+
+    .mac-camera-led {
+      position: absolute;
+      right: 16px;
+      width: 4.5px;
+      height: 4.5px;
+      border-radius: 50%;
+      background: #30D158;
+      box-shadow: 0 0 6px rgba(48, 209, 88, 0.85);
+    }
+
+    /* Live Obsidian MacPrompt Notch Teleprompter Overlay */
+    .notch-overlay-dock {
+      position: absolute;
+      top: 24px;
+      left: 0;
+      right: 0;
+      z-index: 35;
+      display: flex;
+      justify-content: center;
+      padding: 0 12px;
+      pointer-events: none;
+    }
+
+    .prompter-overlay {
+      pointer-events: auto;
+      width: 100%;
+      max-width: 472px;
+      background: #090A0C;
+      color: #FFFFFF;
+      border-radius: 0 0 18px 18px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-top: none;
+      box-shadow: 0 26px 52px -12px rgba(0, 0, 0, 0.78), 0 0 0 1px rgba(0, 0, 0, 0.5);
+      padding: 8px 16px 12px;
+      cursor: default;
+      transition: opacity 320ms var(--ease), transform 320ms var(--ease), border-color 200ms ease;
+    }
+
+    .prompter-overlay:hover {
+      border-color: rgba(255, 107, 44, 0.45);
+    }
+
+    .prompter-overlay.is-hidden-capture {
+      opacity: 0;
+      transform: translateY(-8px) scale(0.985);
+      pointer-events: none;
+    }
+
+    .overlay-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 6px;
+      min-height: 18px;
+      font-size: 10px;
+      color: rgba(255, 255, 255, 0.58);
+    }
+
+    .overlay-status-left {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 500;
+    }
+
+    .overlay-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--orange);
+      flex-shrink: 0;
+    }
+
+    .hover-pause-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 2px 7px;
+      border-radius: var(--radius-pill);
+      background: rgba(255, 107, 44, 0.18);
+      border: 1px solid rgba(255, 107, 44, 0.48);
+      color: #FF8E5C;
+      font-family: var(--font-mono);
+      font-size: 9.5px;
+      font-weight: 500;
+      opacity: 0;
+      transform: translateY(-2px);
+      pointer-events: none;
+      transition: opacity 160ms ease, transform 160ms var(--ease);
+    }
+
+    .prompter-overlay.is-hover-paused .hover-pause-badge {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .overlay-status-right {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .voice-meter {
+      display: inline-flex;
+      align-items: flex-end;
+      gap: 2px;
+      height: 11px;
+      opacity: 0.3;
+      transition: opacity 180ms ease;
+    }
+
+    .voice-meter.is-live {
+      opacity: 1;
+    }
+
+    .voice-bar {
+      width: 2.5px;
+      height: 3px;
+      border-radius: 2px;
+      background: var(--orange);
+      transition: height 110ms ease-out;
+    }
+
+    .overlay-speed-readout {
+      font-family: var(--font-mono);
+      font-size: 9.5px;
+      color: rgba(255, 255, 255, 0.55);
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Animated Height Script Viewport */
+    .overlay-viewport {
+      position: relative;
+      height: 92px;
+      overflow: hidden;
+      -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 18%, #000 80%, transparent 100%);
+      mask-image: linear-gradient(to bottom, transparent 0%, #000 18%, #000 80%, transparent 100%);
+      transition: height 280ms var(--ease);
+    }
+
+    .overlay-viewport[data-height="compact"] { height: 64px; }
+    .overlay-viewport[data-height="standard"] { height: 92px; }
+    .overlay-viewport[data-height="tall"] { height: 126px; }
+
+    .overlay-guide {
+      position: absolute;
+      left: 0;
+      top: 22px;
+      color: var(--orange);
+      font-size: 13px;
+      line-height: 1;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .overlay-track {
+      padding-left: 16px;
+      will-change: transform;
+    }
+
+    .overlay-script {
+      font-size: 15px;
+      line-height: 1.52;
+      font-weight: 500;
+      letter-spacing: -0.015em;
+      color: rgba(255, 255, 255, 0.94);
+      transition: font-size 200ms var(--ease);
+    }
+
+    .overlay-script .script-hl {
+      color: #FF8E5C;
+      font-weight: 600;
+    }
+
+    /* Screen Capture Privacy Annotation Badge */
+    .capture-hidden-badge {
+      position: absolute;
+      top: 44px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-6px);
+      z-index: 36;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 14px;
+      border-radius: var(--radius-pill);
+      background: rgba(17, 19, 21, 0.92);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      color: #FFFFFF;
+      font-size: 11.5px;
+      font-weight: 500;
+      white-space: nowrap;
+      box-shadow: 0 14px 32px rgba(0, 0, 0, 0.45);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 280ms var(--ease), transform 280ms var(--ease);
+    }
+
+    .capture-hidden-badge.is-visible {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .capture-shield-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--orange);
+      box-shadow: 0 0 0 3px rgba(255, 107, 44, 0.25);
+    }
+
+    /* Warm Editorial macOS Desktop Workspace (Clean Video Call / Presentation Window) */
+    .mac-desktop {
+      position: relative;
+      z-index: 10;
+      flex: 1;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding: 68px 16px 18px;
+    }
+
+    .desktop-window {
+      width: 100%;
+      max-width: 740px;
+      height: 100%;
+      min-height: 175px;
+      border-radius: 12px;
+      background: #1C1E22;
+      border: 1px solid rgba(255, 255, 255, 0.11);
+      box-shadow: 0 22px 48px -16px rgba(0, 0, 0, 0.65);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .window-bar {
+      height: 28px;
+      padding: 0 12px;
+      background: #23252A;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .traffic-lights {
+      display: flex;
+      gap: 6px;
+    }
+
+    .traffic-lights span {
+      width: 8.5px;
+      height: 8.5px;
+      border-radius: 50%;
+    }
+
+    .tl-r { background: #E35E56; }
+    .tl-y { background: #E6B14A; }
+    .tl-g { background: #59B45C; }
+
+    .window-caption {
+      font-size: 10.5px;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.56);
+    }
+
+    .window-stage {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1.55fr 1fr;
+      gap: 12px;
+      padding: 14px;
+      align-items: stretch;
+    }
+
+    .deck-preview {
+      background: #F7F5F0;
+      color: var(--ink);
+      border-radius: 8px;
+      padding: 16px 18px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .deck-kicker {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 6px;
+    }
+
+    .deck-headline {
+      font-size: clamp(13px, 2.2vw, 20px);
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -0.032em;
+      color: var(--ink);
+    }
+
+    .deck-sub {
+      margin-top: 7px;
+      font-size: 11px;
+      line-height: 1.48;
+      color: var(--ink-secondary);
+      display: none;
+    }
+
+    .deck-progress {
+      margin-top: 12px;
+      display: flex;
+      gap: 6px;
+    }
+
+    .deck-progress span {
+      height: 4px;
+      width: 22px;
+      border-radius: 2px;
+      background: rgba(17, 19, 21, 0.14);
+    }
+
+    .deck-progress span:first-child {
+      width: 44px;
+      background: var(--obsidian);
+    }
+
+    .camera-preview {
+      background: #141619;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 8px;
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      color: rgba(255, 255, 255, 0.78);
+    }
+
+    .cam-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 9.5px;
+    }
+
+    .cam-live {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 2px 7px;
+      border-radius: var(--radius-pill);
+      background: rgba(255, 255, 255, 0.08);
+      font-weight: 600;
+    }
+
+    .cam-live-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: #30D158;
+    }
+
+    .cam-silhouette {
+      width: 46px;
+      height: 46px;
+      margin: auto;
+      border-radius: 50%;
+      background: linear-gradient(180deg, #32353C 0%, #1F2126 100%);
+      border: 1px solid rgba(255, 255, 255, 0.11);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: rgba(255, 255, 255, 0.62);
+    }
+
+    .cam-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 9.5px;
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    /* Interactive Control Dock directly below MacBook */
+    .control-dock {
+      margin-top: 14px;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 10px 12px;
+      box-shadow: var(--shadow-dock);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .dock-toggles {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .segmented {
+      display: inline-flex;
+      background: var(--cream);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-pill);
+      padding: 3px;
+      gap: 2px;
+    }
+
+    .seg-btn {
+      padding: 6px 12px;
+      border-radius: var(--radius-pill);
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--ink-secondary);
+      min-height: 32px;
+      transition: background-color 160ms ease, color 160ms ease, box-shadow 160ms ease;
+    }
+
+    .seg-btn[aria-pressed="true"] {
+      background: var(--obsidian);
+      color: var(--white);
+      box-shadow: 0 2px 6px rgba(17, 19, 21, 0.18);
+    }
+
+    .seg-btn[data-capture="hidden"][aria-pressed="true"],
+    .seg-btn[data-mode="voice"][aria-pressed="true"] {
+      background: var(--orange);
+      color: var(--white);
+    }
+
+    .dock-quick {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .dock-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 6px 11px;
+      min-height: 34px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border);
+      background: var(--white);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--ink);
+      transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease;
+    }
+
+    .dock-btn:hover {
+      background: var(--cream);
+      border-color: #CFC8BA;
+    }
+
+    .dock-btn.is-dark {
+      background: var(--obsidian);
+      border-color: var(--obsidian);
+      color: var(--white);
+    }
+
+    .dock-btn.is-dark:hover {
+      background: #23262C;
+    }
+
+    .dock-btn-mono {
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+    }
+
+    .dock-hint {
+      margin-top: 10px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--ink-muted);
+    }
+
+    .dock-hint strong {
+      color: var(--ink-secondary);
+      font-weight: 600;
+    }
+
+    /* =========================================================================
+       5. ARCHITECTURAL BENTO FEATURE SHOWCASE (#features)
+    ========================================================================= */
+    .bento-header {
+      max-width: 580px;
+      margin-bottom: 28px;
+    }
+
+    .bento-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    .bento-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      box-shadow: var(--shadow-card);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 20px;
+      overflow: hidden;
+      transition: transform 220ms var(--ease), border-color 200ms ease;
+    }
+
+    .bento-card:hover {
+      border-color: #D7D0C2;
+    }
+
+    .bento-card.is-obsidian {
+      background: var(--obsidian);
+      border-color: var(--obsidian-border);
+      color: var(--white);
+      box-shadow: 0 24px 50px -24px rgba(17, 19, 21, 0.55);
+      position: relative;
+    }
+
+    .bento-card.is-obsidian::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 65% 50% at 85% 0%, rgba(255, 107, 44, 0.14), transparent 70%);
+      pointer-events: none;
+    }
+
+    .bento-card.is-obsidian h3 {
+      color: var(--white);
+    }
+
+    .bento-card.is-obsidian p {
+      color: rgba(255, 255, 255, 0.68);
+    }
+
+    .bento-copy {
+      position: relative;
+      z-index: 1;
+    }
+
+    .bento-tag {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 8px;
+    }
+
+    .bento-card h3 {
+      font-size: 19px;
+      font-weight: 700;
+      line-height: 1.22;
+      letter-spacing: -0.028em;
+    }
+
+    .bento-card p {
+      margin-top: 8px;
+      font-size: 14px;
+      line-height: 1.58;
+      color: var(--ink-secondary);
+    }
+
+    /* Bento Micro-UI Visuals */
+    .micro-ui {
+      position: relative;
+      z-index: 1;
+      border-radius: var(--radius-md);
+      background: var(--cream);
+      border: 1px solid var(--border);
+      padding: 14px;
+    }
+
+    .bento-card.is-obsidian .micro-ui {
+      background: var(--obsidian-card);
+      border-color: var(--obsidian-border);
+    }
+
+    /* Card A Micro-UI: Side-by-side Your Display vs Screen Capture */
+    .privacy-compare {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    .mini-screen {
+      background: #101215;
+      border: 1px solid #2A2E35;
+      border-radius: 11px;
+      overflow: hidden;
+      padding-bottom: 12px;
+    }
+
+    .mini-screen-bar {
+      height: 18px;
+      padding: 0 9px;
+      background: #16191D;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-family: var(--font-mono);
+      font-size: 9px;
+      color: rgba(255, 255, 255, 0.55);
+      position: relative;
+    }
+
+    .mini-notch {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 50px;
+      height: 12px;
+      background: #050607;
+      border-radius: 0 0 6px 6px;
+    }
+
+    .mini-screen-body {
+      padding: 8px 10px 0;
+      min-height: 76px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+    }
+
+    .mini-hud {
+      width: 100%;
+      max-width: 190px;
+      background: #07080A;
+      border: 1px solid rgba(255, 107, 44, 0.42);
+      border-radius: 8px;
+      padding: 8px 10px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45);
+    }
+
+    .mini-hud-line {
+      height: 4px;
+      border-radius: 2px;
+      background: rgba(255, 255, 255, 0.25);
+      margin-bottom: 5px;
+    }
+
+    .mini-hud-line.active {
+      background: var(--orange);
+      width: 82%;
+    }
+
+    .mini-hud-line.last {
+      width: 60%;
+      margin-bottom: 0;
+    }
+
+    .mini-hidden-state {
+      margin: auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 10px;
+      border-radius: var(--radius-pill);
+      background: rgba(255, 107, 44, 0.14);
+      border: 1px solid rgba(255, 107, 44, 0.35);
+      color: #FF8E5C;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 500;
+    }
+
+    .mini-screen-label {
+      margin-top: 8px;
+      text-align: center;
+      font-size: 11px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    /* Card B Micro-UI: Menu Bar Popover + Zero-Clutter Dock */
+    .menubar-demo {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .mb-strip {
+      background: var(--obsidian);
+      color: rgba(255, 255, 255, 0.85);
+      border-radius: 8px;
+      height: 28px;
+      padding: 0 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 10.5px;
+    }
+
+    .mb-popover {
+      align-self: flex-end;
+      width: 196px;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 7px;
+      box-shadow: 0 12px 24px -10px rgba(17, 19, 21, 0.16);
+      display: grid;
+      gap: 4px;
+    }
+
+    .mb-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 5px 8px;
+      border-radius: 6px;
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .mb-row.is-active {
+      background: var(--orange-soft);
+      color: var(--orange-dark);
+    }
+
+    .mb-pill-on {
+      font-family: var(--font-mono);
+      font-size: 9.5px;
+      padding: 1px 6px;
+      border-radius: var(--radius-pill);
+      background: var(--obsidian);
+      color: var(--white);
+    }
+
+    .dock-strip {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 10px;
+      border-radius: 9px;
+      background: rgba(17, 19, 21, 0.05);
+      font-size: 10.5px;
+      color: var(--ink-secondary);
+    }
+
+    .dock-icons {
+      display: flex;
+      gap: 5px;
+    }
+
+    .dock-icons span {
+      width: 14px;
+      height: 14px;
+      border-radius: 4px;
+      background: #D8D3C8;
+    }
+
+    /* Card C Micro-UI: Voice Bars + Speed + Hover to Pause */
+    .voice-card-ui {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .voice-wave-box {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .bento-bars {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      height: 24px;
+    }
+
+    .bento-bars span {
+      width: 3px;
+      border-radius: 2px;
+      background: var(--orange);
+      animation: voiceBounce 1.4s ease-in-out infinite;
+    }
+
+    .bento-bars span:nth-child(1) { height: 8px; animation-delay: 0s; }
+    .bento-bars span:nth-child(2) { height: 18px; animation-delay: 0.15s; }
+    .bento-bars span:nth-child(3) { height: 24px; animation-delay: 0.3s; }
+    .bento-bars span:nth-child(4) { height: 14px; animation-delay: 0.45s; }
+    .bento-bars span:nth-child(5) { height: 21px; animation-delay: 0.6s; }
+    .bento-bars span:nth-child(6) { height: 11px; animation-delay: 0.75s; }
+    .bento-bars span:nth-child(7) { height: 16px; animation-delay: 0.9s; }
+
+    @keyframes voiceBounce {
+      0%, 100% { transform: scaleY(0.5); opacity: 0.65; }
+      50% { transform: scaleY(1); opacity: 1; }
+    }
+
+    .speed-chip {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 500;
+      padding: 3px 8px;
+      border-radius: 6px;
+      background: var(--cream);
+      border: 1px solid var(--border);
+      color: var(--ink);
+    }
+
+    .hover-cursor-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      align-self: flex-start;
+      padding: 6px 11px;
+      border-radius: var(--radius-pill);
+      background: var(--obsidian);
+      color: var(--white);
+      font-size: 11.5px;
+      font-weight: 600;
+    }
+
+    /* Card D Micro-UI: Script List + 6 Format Pills */
+    .library-ui {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .script-mini-list {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .script-mini-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 11px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--ink);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .script-mini-row:last-child {
+      border-bottom: none;
+    }
+
+    .script-mini-left {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .script-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #D4CEC2;
+    }
+
+    .script-dot.active {
+      background: var(--orange);
+    }
+
+    .script-mini-meta {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 400;
+      color: var(--ink-muted);
+    }
+
+    .format-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+    }
+
+    .format-pill {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 500;
+      padding: 3px 7px;
+      border-radius: 6px;
+      background: var(--white);
+      border: 1px solid var(--border);
+      color: var(--ink-secondary);
+    }
+
+    /* Card E Micro-UI: Inspector Controls + Multi-Display */
+    .inspector-ui {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px;
+      display: grid;
+      gap: 11px;
+    }
+
+    .insp-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .insp-slider {
+      flex: 1;
+      max-width: 110px;
+      height: 4px;
+      border-radius: 2px;
+      background: #E8E3D9;
+      position: relative;
+    }
+
+    .insp-slider-fill {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 68%;
+      border-radius: 2px;
+      background: var(--orange);
+    }
+
+    .insp-slider-knob {
+      position: absolute;
+      left: 68%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      background: var(--white);
+      border: 2px solid var(--orange);
+    }
+
+    .height-bars {
+      display: flex;
+      align-items: flex-end;
+      gap: 4px;
+    }
+
+    .height-bars span {
+      width: 14px;
+      border-radius: 3px;
+      background: #E8E3D9;
+    }
+
+    .height-bars span:nth-child(1) { height: 8px; }
+    .height-bars span:nth-child(2) { height: 13px; background: var(--orange); }
+    .height-bars span:nth-child(3) { height: 18px; }
+
+    .display-pills {
+      display: flex;
+      gap: 6px;
+      padding-top: 8px;
+      border-top: 1px solid var(--border);
+    }
+
+    .disp-pill {
+      flex: 1;
+      text-align: center;
+      padding: 5px 8px;
+      border-radius: 7px;
+      font-size: 10.5px;
+      font-weight: 600;
+      background: var(--cream);
+      border: 1px solid var(--border);
+      color: var(--ink-secondary);
+    }
+
+    .disp-pill.is-selected {
+      background: var(--obsidian);
+      border-color: var(--obsidian);
+      color: var(--white);
+    }
+
+    /* Complete 13 Core Capabilities Strip */
+    .capabilities-strip {
+      margin-top: 18px;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 22px 24px;
+      box-shadow: var(--shadow-card);
+    }
+
+    .capabilities-head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding-bottom: 14px;
+      margin-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .capabilities-head h3 {
+      font-size: 14.5px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .capabilities-head span {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--ink-muted);
+    }
+
+    .capabilities-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px 24px;
+    }
+
+    .capabilities-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 9px;
+      font-size: 13.5px;
+      line-height: 1.45;
+      color: var(--ink-secondary);
+    }
+
+    .capabilities-list li strong {
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    .cap-check {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--orange-soft);
+      color: var(--orange);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    /* =========================================================================
+       6. USE CASES SECTION (6-CELL HAIRLINE ARCHITECTURAL GRID)
+    ========================================================================= */
+    .use-cases-header {
+      max-width: 520px;
+      margin-bottom: 24px;
+    }
+
+    .use-cases-grid {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      box-shadow: var(--shadow-card);
+    }
+
+    .use-case-cell {
+      padding: 20px;
+      border-bottom: 1px solid var(--border);
+      border-right: 1px solid var(--border);
+      transition: background-color 180ms ease;
+    }
+
+    .use-case-cell:nth-child(2n) {
+      border-right: none;
+    }
+
+    .use-case-cell:nth-last-child(-n+2) {
+      border-bottom: none;
+    }
+
+    .use-case-cell:hover {
+      background: #FCFBF8;
+    }
+
+    .use-case-icon {
+      width: 20px;
+      height: 20px;
+      color: var(--ink-secondary);
+      margin-bottom: 12px;
+      transition: color 180ms ease, transform 180ms var(--ease);
+    }
+
+    .use-case-cell:hover .use-case-icon {
+      color: var(--orange);
+      transform: translateY(-1px);
+    }
+
+    .use-case-cell h3 {
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .use-case-cell p {
+      margin-top: 5px;
+      font-size: 13.5px;
+      line-height: 1.5;
+      color: var(--ink-secondary);
+    }
+
+    /* =========================================================================
+       7. SIMPLE PRICING BAND (#pricing)
+    ========================================================================= */
+    .pricing-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-card);
+      padding: 28px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .pricing-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--orange);
+    }
+
+    .pricing-left {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      max-width: 560px;
+    }
+
+    .pricing-title {
+      font-size: clamp(26px, 4vw, 36px);
+      font-weight: 800;
+      line-height: 1.08;
+      letter-spacing: -0.038em;
+    }
+
+    .pricing-copy {
+      margin-top: 8px;
+      font-size: 15px;
+      line-height: 1.58;
+      color: var(--ink-secondary);
+    }
+
+    .pricing-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+    }
+
+    .price-figure {
+      font-size: clamp(46px, 6vw, 58px);
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: -0.045em;
+      font-variant-numeric: tabular-nums;
+      color: var(--ink);
+    }
+
+    .pricing-right .btn {
+      width: 100%;
+    }
+
+    .pricing-subtext {
+      font-size: 12.5px;
+      font-weight: 500;
+      color: var(--ink-muted);
+    }
+
+    /* =========================================================================
+       8. MINIMAL 2-COLUMN FAQ ACCORDION (#faq)
+    ========================================================================= */
+    .faq-header {
+      margin-bottom: 24px;
+    }
+
+    .faq-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0 40px;
+    }
+
+    .faq-col {
+      border-top: 1px solid var(--border);
+    }
+
+    .faq-col + .faq-col {
+      border-top: none;
+    }
+
+    .faq-item {
+      border-bottom: 1px solid var(--border);
+    }
+
+    .faq-trigger {
+      width: 100%;
+      padding: 16px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      text-align: left;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      transition: color 150ms ease;
+    }
+
+    .faq-trigger:hover {
+      color: var(--orange-dark);
+    }
+
+    .faq-plus {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: var(--white);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: var(--ink);
+      transition: transform 220ms var(--ease), border-color 180ms ease, color 180ms ease;
+    }
+
+    .faq-trigger[aria-expanded="true"] .faq-plus {
+      transform: rotate(45deg);
+      border-color: var(--orange);
+      color: var(--orange);
+    }
+
+    .faq-panel {
+      display: grid;
+      grid-template-rows: 0fr;
+      opacity: 0;
+      transition: grid-template-rows 240ms var(--ease), opacity 200ms ease;
+    }
+
+    .faq-panel[data-open="true"] {
+      grid-template-rows: 1fr;
+      opacity: 1;
+    }
+
+    .faq-panel-inner {
+      overflow: hidden;
+    }
+
+    .faq-answer {
+      padding: 0 28px 16px 0;
+      font-size: 14px;
+      line-height: 1.62;
+      color: var(--ink-secondary);
+    }
+
+    /* =========================================================================
+       9. OBSIDIAN BLACK CLOSING CTA + INTEGRATED MINIMAL FOOTER
+    ========================================================================= */
+    .closing-band {
+      background: var(--obsidian);
+      color: var(--white);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .closing-band::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 65% 48% at 50% 0%, rgba(255, 107, 44, 0.14), transparent 70%);
+      pointer-events: none;
+    }
+
+    .final-cta {
+      position: relative;
+      z-index: 1;
+      padding: 64px 0 56px;
+      text-align: center;
+    }
+
+    .final-cta-title {
+      color: var(--white);
+      font-size: clamp(34px, 6vw, 54px);
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: -0.042em;
+    }
+
+    .final-cta-copy {
+      margin-top: 14px;
+      font-size: 17px;
+      color: rgba(255, 255, 255, 0.68);
+    }
+
+    .final-cta-action {
+      margin-top: 26px;
+    }
+
+    .final-cta-meta {
+      margin-top: 12px;
+      font-size: 12.5px;
+      color: rgba(255, 255, 255, 0.45);
+    }
+
+    .site-footer {
+      position: relative;
+      z-index: 1;
+      border-top: 1px solid var(--footer-divider);
+      padding: 28px 0 34px;
+    }
+
+    .footer-top {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .footer-brand {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .footer-brand-name {
+      font-weight: 800;
+      font-size: 15px;
+      color: var(--white);
+      letter-spacing: -0.025em;
+    }
+
+    .footer-tagline {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.52);
+    }
+
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 20px;
+      font-size: 13.5px;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.66);
+    }
+
+    .footer-links button:hover,
+    .footer-links a:hover {
+      color: var(--white);
+    }
+
+    .footer-links .footer-buy {
+      color: var(--orange);
+      font-weight: 600;
+    }
+
+    .footer-links .footer-buy:hover {
+      color: #FF8752;
+    }
+
+    .footer-bottom {
+      margin-top: 22px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(255, 255, 255, 0.07);
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.42);
+    }
+
+    /* =========================================================================
+       10. ACCESSIBLE MODALS (CHECKOUT PREVIEW + INFO SHEETS)
+    ========================================================================= */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 90;
+      background: rgba(17, 19, 21, 0.58);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .modal-backdrop.is-open {
+      display: flex;
+    }
+
+    .modal-card {
+      width: 100%;
+      max-width: 448px;
+      max-height: calc(100dvh - 32px);
+      overflow-y: auto;
+      background: var(--white);
+      color: var(--ink);
+      border-radius: 22px;
+      border: 1px solid var(--border);
+      box-shadow: 0 32px 72px -18px rgba(17, 19, 21, 0.36);
+      padding: 26px;
+      animation: modalPop 200ms var(--ease);
+    }
+
+    @keyframes modalPop {
+      from {
+        opacity: 0;
+        transform: translateY(8px) scale(0.98);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .modal-title {
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+
+    .modal-close {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--ink-secondary);
+      flex-shrink: 0;
+      transition: background-color 150ms ease, color 150ms ease;
+    }
+
+    .modal-close:hover {
+      background: var(--cream);
+      color: var(--ink);
+    }
+
+    .modal-body {
+      margin-top: 14px;
+      font-size: 14px;
+      line-height: 1.62;
+      color: var(--ink-secondary);
+    }
+
+    .modal-body p + p {
+      margin-top: 10px;
+    }
+
+    .checkout-summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 14px;
+      background: var(--cream);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      margin-top: 16px;
+    }
+
+    .checkout-product {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .checkout-product-name {
+      font-weight: 700;
+      font-size: 15px;
+      color: var(--ink);
+    }
+
+    .checkout-product-sub {
+      font-size: 12.5px;
+      color: var(--ink-secondary);
+    }
+
+    .checkout-price {
+      font-weight: 800;
+      font-size: 22px;
+      font-variant-numeric: tabular-nums;
+      color: var(--ink);
+    }
+
+    .checkout-list {
+      margin: 16px 0 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 8px;
+    }
+
+    .checkout-list li {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      font-size: 13.5px;
+      color: var(--ink);
+      font-weight: 500;
+    }
+
+    .checkout-list svg {
+      color: var(--orange);
+      flex-shrink: 0;
+    }
+
+    .checkout-note {
+      margin-top: 16px;
+      padding: 11px 13px;
+      border-radius: 10px;
+      background: var(--orange-soft);
+      border: 1px solid var(--orange-ring);
+      font-size: 12.5px;
+      line-height: 1.5;
+      color: var(--ink);
+    }
+
+    .checkout-note code {
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      background: rgba(17, 19, 21, 0.07);
+      padding: 1px 5px;
+      border-radius: 4px;
+    }
+
+    .checkout-modal-footer {
+      margin-top: 18px;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    /* =========================================================================
+       11. SCROLL REVEAL & RESPONSIVE BREAKPOINTS
+    ========================================================================= */
+    .reveal {
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 480ms var(--ease), transform 480ms var(--ease);
+    }
+
+    .reveal.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (min-width: 640px) {
+      .container {
+        padding: 0 28px;
+      }
+
+      .macbook-bezel {
+        padding: 11px;
+        border-radius: 26px;
+      }
+
+      .macbook-screen {
+        border-radius: 16px;
+        aspect-ratio: 16 / 9.5;
+      }
+
+      .mac-menu-item {
+        display: inline;
+      }
+
+      .mac-battery {
+        display: inline-flex;
+      }
+
+      .mac-notch {
+        width: 148px;
+        height: 26px;
+      }
+
+      .notch-overlay-dock {
+        top: 26px;
+      }
+
+      .deck-sub {
+        display: block;
+      }
+
+      .privacy-compare {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .capabilities-list {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .pricing-card {
+        padding: 36px 40px;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .pricing-right {
+        border-top: none;
+        padding-top: 0;
+        padding-left: 34px;
+        border-left: 1px solid var(--border);
+        align-items: flex-end;
+        flex-shrink: 0;
+      }
+
+      .pricing-right .btn {
+        width: auto;
+      }
+
+      .footer-top {
+        flex-direction: row;
+        align-items: center;
+      }
+    }
+
+    @media (min-width: 880px) {
+      .section {
+        padding: 72px 0;
+      }
+
+      .hero {
+        padding: 54px 0 36px;
+      }
+
+      .nav-links {
+        display: flex;
+      }
+
+      .bento-grid {
+        grid-template-columns: repeat(12, 1fr);
+        gap: 18px;
+      }
+
+      .bento-span-7 { grid-column: span 7; }
+      .bento-span-5 { grid-column: span 5; }
+      .bento-span-4 { grid-column: span 4; }
+
+      .capabilities-list {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .use-cases-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .use-case-cell:nth-child(2n) {
+        border-right: 1px solid var(--border);
+      }
+
+      .use-case-cell:nth-child(3n) {
+        border-right: none;
+      }
+
+      .use-case-cell:nth-last-child(-n+2) {
+        border-bottom: 1px solid var(--border);
+      }
+
+      .use-case-cell:nth-last-child(-n+3) {
+        border-bottom: none;
+      }
+
+      .faq-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .faq-col + .faq-col {
+        border-top: 1px solid var(--border);
+      }
+
+      .final-cta {
+        padding: 78px 0 64px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+      .hero-anim,
+      .reveal {
+        opacity: 1 !important;
+        transform: none !important;
+        animation: none !important;
+        transition: none !important;
+      }
+      .pulse-dot::after,
+      .bento-bars span {
+        animation: none !important;
+      }
+      .btn,
+      .prompter-overlay,
+      .overlay-viewport,
+      .faq-panel,
+      .faq-plus,
+      .capture-hidden-badge,
+      .modal-card {
+        transition: none !important;
+        animation: none !important;
+      }
+    }
+
+    /* =========================================================================
+       MOBILE HAMBURGER MENU & NAVIGATION DRAWER (< 880px)
+    ========================================================================= */
+    .mobile-menu-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4.5px;
+      width: 38px;
+      height: 38px;
+      padding: 8px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--white);
+      box-shadow: 0 2px 6px -2px rgba(31, 26, 18, 0.06);
+      cursor: pointer;
+      transition: background-color 150ms ease, border-color 150ms ease;
+      flex-shrink: 0;
+      order: 2;
+    }
+
+    .mobile-menu-btn:hover {
+      background: var(--cream);
+      border-color: #CFC8BA;
+    }
+
+    .hamburger-line {
+      display: block;
+      width: 16px;
+      height: 1.8px;
+      background: var(--ink);
+      border-radius: 2px;
+      transition: transform 220ms var(--ease), opacity 160ms ease;
+    }
+
+    .mobile-menu-btn[aria-expanded="true"] .hamburger-line:nth-child(1) {
+      transform: translateY(6.3px) rotate(45deg);
+    }
+    .mobile-menu-btn[aria-expanded="true"] .hamburger-line:nth-child(2) {
+      opacity: 0;
+      transform: scaleX(0);
+    }
+    .mobile-menu-btn[aria-expanded="true"] .hamburger-line:nth-child(3) {
+      transform: translateY(-6.3px) rotate(-45deg);
+    }
+
+    @media (max-width: 879px) {
+      .nav-right {
+        gap: 10px;
+      }
+
+      .nav-cta-btn {
+        order: 1;
+      }
+
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        z-index: 59;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 2px;
+        padding: 8px 20px 14px;
+        background: rgba(247, 245, 240, 0.98);
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+        border-bottom: 1px solid var(--border);
+        box-shadow: 0 18px 38px -14px rgba(17, 19, 21, 0.16);
+      }
+
+      .nav-links.is-mobile-open {
+        display: flex;
+        animation: navDrawerIn 180ms var(--ease);
+      }
+
+      @keyframes navDrawerIn {
+        from {
+          opacity: 0;
+          transform: translateY(-6px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .nav-link {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 13px 4px;
+        font-size: 15.5px;
+        font-weight: 600;
+        color: var(--ink);
+        border-bottom: 1px solid var(--border-subtle);
+      }
+
+      .nav-link:last-child {
+        border-bottom: none;
+      }
+    }
+
+    /* =========================================================================
+       MOBILE-FIRST RESPONSIVE OVERRIDES (< 640px)
+    ========================================================================= */
+    @media (max-width: 639px) {
+      .container {
+        padding: 0 16px;
+      }
+
+      /* Navbar: crisp single-row layout */
+      .navbar-inner {
+        height: 60px;
+        gap: 10px;
+      }
+
+      .brand-link {
+        font-size: 15.5px;
+        gap: 8px;
+      }
+
+      .brand-link .brand-icon {
+        width: 28px;
+        height: 28px;
+      }
+
+      .nav-right {
+        gap: 8px;
+      }
+
+      .nav-links {
+        padding: 6px 16px 12px;
+      }
+
+      .nav-cta-btn {
+        font-size: 12.5px;
+        padding: 8px 13px;
+        min-height: 36px;
+      }
+
+      /* Hero: tighter spacing */
+      .hero {
+        padding: 32px 0 24px;
+      }
+
+      .hero-title {
+        font-size: clamp(34px, 9.2vw, 48px);
+      }
+
+      .hero-copy {
+        font-size: 15px;
+      }
+
+      .hero-actions {
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .hero-actions .btn {
+        width: 100%;
+      }
+
+      /* Showcase: balanced proportions & zero notch collision */
+      .showcase-section {
+        padding: 8px 0 42px;
+      }
+
+      .macbook-bezel {
+        border-radius: 14px;
+        padding: 5px;
+      }
+
+      .macbook-screen {
+        border-radius: 10px;
+      }
+
+      .mac-menubar {
+        height: 24px;
+        padding: 0 9px;
+        font-size: 9.5px;
+      }
+
+      .mac-menubar-left,
+      .mac-menubar-right {
+        gap: 6px;
+      }
+
+      .mac-menubar-right > svg {
+        display: none;
+      }
+
+      .mac-rec-pill {
+        font-size: 8px;
+        padding: 1.5px 5px;
+        gap: 4px;
+      }
+
+      .mac-mp-tray {
+        width: 15px;
+        height: 15px;
+      }
+
+      .mac-mp-tray img {
+        width: 12px;
+        height: 12px;
+      }
+
+      .mac-notch {
+        width: 72px;
+        height: 18px;
+        border-radius: 0 0 8px 8px;
+      }
+
+      .mac-camera {
+        width: 7px;
+        height: 7px;
+      }
+
+      .mac-camera::after {
+        width: 2.5px;
+        height: 2.5px;
+      }
+
+      .mac-camera-led {
+        right: 9px;
+        width: 3px;
+        height: 3px;
+      }
+
+      .notch-overlay-dock {
+        top: 18px;
+        padding: 0 8px;
+      }
+
+      .prompter-overlay {
+        padding: 6px 10px 9px;
+        border-radius: 0 0 12px 12px;
+      }
+
+      .overlay-header {
+        font-size: 9px;
+        margin-bottom: 4px;
+        min-height: 15px;
+      }
+
+      .hover-pause-badge {
+        font-size: 8.5px;
+        padding: 1px 6px;
+      }
+
+      .overlay-viewport {
+        height: 60px;
+      }
+      .overlay-viewport[data-height="compact"] { height: 44px; }
+      .overlay-viewport[data-height="standard"] { height: 60px; }
+      .overlay-viewport[data-height="tall"] { height: 82px; }
+
+      .overlay-guide {
+        top: 15px;
+        font-size: 11px;
+      }
+
+      .overlay-track {
+        padding-left: 13px;
+      }
+
+      .overlay-script {
+        font-size: 11.5px;
+        line-height: 1.42;
+      }
+
+      .mac-desktop {
+        padding: 46px 8px 10px;
+      }
+
+      .desktop-window {
+        min-height: 120px;
+        border-radius: 8px;
+      }
+
+      .window-bar {
+        height: 22px;
+        padding: 0 8px;
+      }
+
+      .window-caption {
+        font-size: 9px;
+      }
+
+      .window-stage {
+        grid-template-columns: 1fr;
+        gap: 8px;
+        padding: 8px;
+      }
+
+      .camera-preview {
+        display: none;
+      }
+
+      .deck-headline {
+        font-size: 13px;
+      }
+
+      .deck-preview {
+        padding: 10px 12px;
+      }
+
+      /* Control Dock: stack cleanly */
+      .control-dock {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 10px;
+        border-radius: 16px;
+        gap: 8px;
+      }
+
+      .dock-toggles {
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      .segmented {
+        width: 100%;
+      }
+
+      .seg-btn {
+        flex: 1;
+        text-align: center;
+        font-size: 12px;
+        padding: 6px 8px;
+      }
+
+      .dock-quick {
+        justify-content: center;
+      }
+
+      .dock-btn {
+        min-height: 36px;
+        padding: 6px 10px;
+      }
+
+      .dock-hint {
+        font-size: 11.5px;
+      }
+
+      /* Sections */
+      .section {
+        padding: 42px 0;
+      }
+
+      .section-title {
+        font-size: clamp(25px, 6.5vw, 32px);
+      }
+
+      /* Bento grid: single column */
+      .bento-card {
+        padding: 20px;
+        gap: 16px;
+      }
+
+      .bento-card h3 {
+        font-size: 17.5px;
+      }
+
+      .bento-card p {
+        font-size: 13.5px;
+      }
+
+      .mb-popover {
+        width: 100%;
+        max-width: 210px;
+      }
+
+      /* Use cases: single column */
+      .use-cases-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .use-case-cell {
+        border-right: none !important;
+        padding: 18px;
+      }
+
+      .use-case-cell:nth-last-child(-n+2) {
+        border-bottom: 1px solid var(--border);
+      }
+
+      .use-case-cell:last-child {
+        border-bottom: none;
+      }
+
+      .use-case-cell h3 {
+        font-size: 14.5px;
+      }
+
+      .use-case-cell p {
+        font-size: 13.5px;
+      }
+
+      /* Pricing: stack cleanly */
+      .pricing-card {
+        padding: 24px 18px;
+        gap: 20px;
+      }
+
+      .pricing-left {
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .pricing-title {
+        font-size: clamp(24px, 6.2vw, 32px);
+      }
+
+      .pricing-copy {
+        font-size: 14px;
+      }
+
+      .pricing-right {
+        width: 100%;
+      }
+
+      .pricing-right .btn {
+        width: 100%;
+      }
+
+      /* FAQ */
+      .faq-trigger {
+        font-size: 14.5px;
+        padding: 15px 0;
+      }
+
+      .faq-answer {
+        padding: 0 12px 16px 0;
+        font-size: 13.5px;
+      }
+
+      /* Closing CTA */
+      .final-cta {
+        padding: 48px 0 40px;
+      }
+
+      .final-cta-title {
+        font-size: clamp(28px, 7.5vw, 40px);
+      }
+
+      .final-cta-copy {
+        font-size: 15px;
+      }
+
+      .final-cta-action .btn {
+        width: 100%;
+      }
+
+      /* Footer */
+      .footer-top {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 14px;
+      }
+
+      .footer-links {
+        flex-wrap: wrap;
+        gap: 16px;
+        font-size: 13.5px;
+      }
+
+      .footer-bottom {
+        font-size: 11.5px;
+      }
+
+      /* Modals */
+      .modal-card {
+        padding: 20px;
+        border-radius: 18px;
+      }
+
+      .modal-title {
+        font-size: 18.5px;
+      }
+
+      .checkout-summary {
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      /* Capabilities */
+      .capabilities-strip {
+        padding: 18px;
+      }
+
+      .capabilities-head {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+      }
+
+      .capabilities-list li {
+        font-size: 13px;
+      }
+
+      /* Privacy compare mini-screens: stack on small screens */
+      .privacy-compare {
+        grid-template-columns: 1fr;
+      }
+
+      /* Capture hidden badge */
+      .capture-hidden-badge {
+        max-width: calc(100% - 20px);
+        white-space: normal;
+        text-align: center;
+        font-size: 10px;
+        padding: 5px 10px;
+        top: 34px;
+      }
+    }
+
+    /* Extra-narrow phones (<= 380px) navbar fit */
+    @media (max-width: 380px) {
+      .brand-link {
+        font-size: 14.5px;
+        gap: 7px;
+      }
+
+      .brand-link .brand-icon {
+        width: 26px;
+        height: 26px;
+      }
+
+      .nav-cta-btn {
+        font-size: 11.5px;
+        padding: 7px 10px;
+        min-height: 34px;
+      }
+
+      .mobile-menu-btn {
+        width: 34px;
+        height: 34px;
+        padding: 7px;
+      }
+    }
+
+    /* =========================================================================
+       MEDIUM SCREENS (640–879px) TWEAKS
+    ========================================================================= */
+    @media (min-width: 640px) and (max-width: 879px) {
+      .nav-cta-btn {
+        order: 1;
+      }
+
+      .mobile-menu-btn {
+        order: 2;
+      }
+
+      .nav-links {
+        padding: 8px 28px 16px;
+      }
+
+      /* Bento: balanced 1 full-width + 2x2 grid (no orphan card) */
+      .bento-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .bento-span-7 {
+        grid-column: span 2;
+      }
+
+      .bento-span-5,
+      .bento-span-4 {
+        grid-column: span 1;
+      }
+
+      /* Use cases: 2 columns */
+      .use-cases-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    /* Hide hamburger on desktop */
+    @media (min-width: 880px) {
+      .mobile-menu-btn {
+        display: none;
+      }
+
+      .nav-links {
+        display: flex !important;
+        position: static;
+        flex-direction: row;
+        align-items: center;
+        gap: 24px;
+        padding: 0;
+        background: transparent;
+        border: none;
+        box-shadow: none;
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+        order: unset;
+      }
+
+      .nav-cta-btn {
+        order: unset;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Accessible Skip Link -->
+  <a href="#main-content" class="sr-only skip-link">Skip to main content</a>
+
+  <!-- MacPrompt Logo is icon.png in the same directory -->
+
+  <!-- 1. STICKY MINIMAL NAVBAR -->
+  <header class="navbar">
+    <div class="container navbar-inner">
+      <a href="#" class="brand-link" aria-label="MacPrompt Home">
+        <img src="icon.png" alt="MacPrompt" class="brand-icon" width="30" height="30" />
+        <span>MacPrompt</span>
+      </a>
+
+      <div class="nav-right">
+        <!-- Mobile Hamburger Button -->
+        <button type="button" id="mobile-menu-btn" class="mobile-menu-btn" aria-label="Toggle navigation menu" aria-expanded="false">
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+        </button>
+
+        <nav class="nav-links" id="nav-links" aria-label="Primary Navigation">
+          <a href="#features" class="nav-link">Features</a>
+          <a href="#how-it-works" class="nav-link">How it works</a>
+          <a href="#faq" class="nav-link">FAQ</a>
+        </nav>
+        <a href="#pricing" data-checkout-cta class="btn btn-primary btn-sm nav-cta-btn">
+          Get MacPrompt — ₹299
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main id="main-content">
+    <!-- 2. HERO SECTION -->
+    <section class="hero">
+      <div class="container">
+        <div class="hero-inner">
+          <div class="eyebrow-pill hero-anim">
+            <span class="pulse-dot" aria-hidden="true"></span>
+            <span>Native macOS Teleprompter</span>
+          </div>
+
+          <h1 class="hero-title hero-anim hero-anim-2">
+            Your words.<br />
+            <span class="accent">Right where you look.</span>
+          </h1>
+
+          <p class="hero-copy hero-anim hero-anim-3">
+            A native macOS App that hides from screen recording for exams, interviews, presentations, meetings, and video recording. Keep your script close, speak naturally, and stay focused.
+          </p>
+
+          <div class="hero-actions hero-anim hero-anim-4">
+            <a href="#pricing" data-checkout-cta class="btn btn-primary">
+              Get MacPrompt — ₹299
+            </a>
+            <a href="#how-it-works" class="btn btn-secondary">
+              See how it works
+            </a>
+          </div>
+
+          <p class="hero-trust hero-anim hero-anim-4">
+            One-time purchase &middot; No subscription &middot; Instant download
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. INTERACTIVE MACBOOK PRO NOTCH SHOWCASE (#how-it-works) -->
+    <section id="how-it-works" class="showcase-section" aria-label="Interactive MacPrompt MacBook notch preview">
+      <div class="container">
+        <div class="macbook-stage reveal">
+          <div class="macbook-bezel">
+            <div class="macbook-screen">
+
+              <!-- Realistic macOS Menu Bar -->
+              <div class="mac-menubar">
+                <div class="mac-menubar-left">
+                  <svg width="11" height="13" viewBox="0 0 14 17" fill="currentColor" aria-hidden="true">
+                    <path d="M11.6 9.1c0-2 1.6-3 1.7-3.1-.9-1.4-2.4-1.6-2.9-1.6-1.2-.1-2.4.7-3 .7-.6 0-1.6-.7-2.6-.7-1.3 0-2.6.8-3.3 2-1.4 2.5-.4 6.1 1 8.1.7 1 1.5 2 2.5 2 1 0 1.4-.6 2.6-.6s1.6.6 2.6.6c1.1 0 1.8-1 2.4-2 .8-1.1 1.1-2.2 1.1-2.3-.1 0-2.1-.8-2.1-3.1zM9.6 3.1c.6-.7 1-1.7.9-2.6-.8 0-1.8.5-2.4 1.2-.5.6-1 1.6-.8 2.5.9.1 1.8-.4 2.3-1.1z"/>
+                  </svg>
+                  <span class="mac-menu-bold">Finder</span>
+                  <span class="mac-menu-item">File</span>
+                  <span class="mac-menu-item">Edit</span>
+                  <span class="mac-menu-item">View</span>
+                </div>
+
+                <!-- Hardware MacBook Notch -->
+                <div class="mac-notch" aria-hidden="true">
+                  <div class="mac-camera"></div>
+                  <span class="mac-camera-led"></span>
+                </div>
+
+                <div class="mac-menubar-right">
+                  <!-- Screen Recording Indicator Pill (Visible in Screen Capture mode) -->
+                  <span id="mac-rec-pill" class="mac-rec-pill" aria-hidden="true">
+                    <span class="mac-rec-pill-dot"></span>
+                    <span>Recording</span>
+                  </span>
+
+                  <!-- Active MacPrompt Menu Bar App Icon -->
+                  <span id="mac-mp-tray" class="mac-mp-tray" title="MacPrompt running in menu bar">
+                    <img src="icon.png" alt="" width="14" height="14" style="border-radius:3px" />
+                  </span>
+
+                  <!-- Wi-Fi -->
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+                    <path d="M5 12.55a11 11 0 0 1 14.08 0"></path>
+                    <path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path>
+                    <circle cx="12" cy="19.5" r="1" fill="currentColor"></circle>
+                  </svg>
+
+                  <!-- Battery -->
+                  <span class="mac-battery" aria-hidden="true">
+                    <span class="mac-battery-body"><span class="mac-battery-fill"></span></span>
+                    <span class="mac-battery-cap"></span>
+                  </span>
+
+                  <span style="font-variant-numeric:tabular-nums">10:42 AM</span>
+                </div>
+              </div>
+
+              <!-- Live Notch-Anchored MacPrompt Teleprompter Overlay -->
+              <div class="notch-overlay-dock">
+                <div id="prompter-overlay" class="prompter-overlay" role="region" aria-label="Live MacPrompt notch overlay — hover to pause">
+                  <div class="overlay-header">
+                    <div class="overlay-status-left">
+                      <span class="overlay-dot" aria-hidden="true"></span>
+                      <span id="overlay-mode-text">Auto-Scroll</span>
+                      <span id="hover-pause-badge" class="hover-pause-badge">Paused &middot; Hover to pause</span>
+                    </div>
+
+                    <div class="overlay-status-right">
+                      <div id="overlay-voice-meter" class="voice-meter" aria-hidden="true">
+                        <span class="voice-bar"></span>
+                        <span class="voice-bar"></span>
+                        <span class="voice-bar"></span>
+                        <span class="voice-bar"></span>
+                        <span class="voice-bar"></span>
+                      </div>
+                      <span id="overlay-speed-readout" class="overlay-speed-readout">1.0&times;</span>
+                    </div>
+                  </div>
+
+                  <div id="overlay-viewport" class="overlay-viewport" data-height="standard">
+                    <span class="overlay-guide" aria-hidden="true">&#9656;</span>
+                    <div id="overlay-track" class="overlay-track">
+                      <p id="overlay-script" class="overlay-script">
+                        Good morning everyone. Notice how my eyes stay right on the camera lens while I speak naturally.
+                        <span class="script-hl">MacPrompt sits directly in the MacBook notch</span>, running quietly from your menu bar so your script is always close without cluttering your Dock.
+                        Move your cursor over this overlay at any moment to pause instantly, or let voice-coupled prompting follow your natural speaking rhythm.
+                        And whenever Privacy Mode is enabled, <span class="script-hl">your script stays completely hidden from screen captures</span> and video recordings while remaining crisp to your eyes.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Screen Capture Privacy Annotation Badge -->
+              <div id="capture-hidden-badge" class="capture-hidden-badge" role="status" aria-live="polite">
+                <span class="capture-shield-dot" aria-hidden="true"></span>
+                <span>Hidden from screen capture &mdash; only you see your script</span>
+              </div>
+
+              <!-- Clean Minimal Editorial Video-Call / Presentation Window -->
+              <div class="mac-desktop">
+                <div class="desktop-window">
+                  <div class="window-bar">
+                    <div class="traffic-lights" aria-hidden="true">
+                      <span class="tl-r"></span>
+                      <span class="tl-y"></span>
+                      <span class="tl-g"></span>
+                    </div>
+                    <span class="window-caption">Presentation &middot; Camera Preview</span>
+                    <span style="width:36px"></span>
+                  </div>
+                  <div class="window-stage">
+                    <div class="deck-preview">
+                      <span class="deck-kicker">Quarterly Review</span>
+                      <div class="deck-headline">Speak clearly while keeping direct eye contact.</div>
+                      <p class="deck-sub">Your audience sees only your presentation and composed delivery while your script stays privately anchored at the notch.</p>
+                      <div class="deck-progress" aria-hidden="true">
+                        <span></span><span></span><span></span>
+                      </div>
+                    </div>
+                    <div class="camera-preview">
+                      <div class="cam-top">
+                        <span class="cam-live"><span class="cam-live-dot"></span>Camera On</span>
+                        <span style="font-family:var(--font-mono)">HD</span>
+                      </div>
+                      <div class="cam-silhouette" aria-hidden="true">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                          <circle cx="12" cy="8.5" r="3.6"></circle>
+                          <path d="M5 19.5c.8-3.3 3.4-5.2 7-5.2s6.2 1.9 7 5.2"></path>
+                        </svg>
+                      </div>
+                      <div class="cam-bottom">
+                        <span>Natural eye line</span>
+                        <span style="color:var(--orange);font-weight:600">Aligned</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Interactive Control Dock -->
+          <div class="control-dock" role="toolbar" aria-label="Interactive MacPrompt showcase controls">
+            <div class="dock-toggles">
+              <!-- Privacy Mode Toggle -->
+              <div class="segmented" role="group" aria-label="Privacy Mode perspective">
+                <button type="button" id="btn-your-view" class="seg-btn" data-capture="visible" aria-pressed="true">
+                  Your View
+                </button>
+                <button type="button" id="btn-screen-capture" class="seg-btn" data-capture="hidden" aria-pressed="false">
+                  Screen Capture
+                </button>
+              </div>
+
+              <!-- Scroll Mode Toggle -->
+              <div class="segmented" role="group" aria-label="Prompting scroll mode">
+                <button type="button" id="btn-mode-auto" class="seg-btn" data-mode="auto" aria-pressed="true">
+                  Auto-Scroll
+                </button>
+                <button type="button" id="btn-mode-voice" class="seg-btn" data-mode="voice" aria-pressed="false">
+                  Voice-Coupled
+                </button>
+              </div>
+            </div>
+
+            <!-- Quick Live Controls -->
+            <div class="dock-quick">
+              <button type="button" id="btn-play" class="dock-btn is-dark" aria-pressed="true" aria-label="Pause or play scrolling">
+                <svg id="ic-pause" width="11" height="11" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <rect x="6" y="4" width="4" height="16" rx="1"></rect>
+                  <rect x="14" y="4" width="4" height="16" rx="1"></rect>
+                </svg>
+                <svg id="ic-play" width="11" height="11" viewBox="0 0 24 24" fill="currentColor" style="display:none" aria-hidden="true">
+                  <polygon points="6,4 20,12 6,20"></polygon>
+                </svg>
+                <span id="lbl-play">Pause</span>
+              </button>
+
+              <button type="button" id="btn-speed" class="dock-btn dock-btn-mono" aria-label="Cycle scroll speed">
+                1.0&times;
+              </button>
+
+              <button type="button" id="btn-font-dec" class="dock-btn dock-btn-mono" aria-label="Decrease teleprompter font size">
+                A&minus;
+              </button>
+              <button type="button" id="btn-font-inc" class="dock-btn dock-btn-mono" aria-label="Increase teleprompter font size">
+                A+
+              </button>
+
+              <button type="button" id="btn-height" class="dock-btn" aria-label="Cycle overlay height">
+                Height: <span id="lbl-height">Standard</span>
+              </button>
+            </div>
+          </div>
+
+          <p class="dock-hint">
+            <strong>Try Hover-to-Pause:</strong> Move your cursor over the notch overlay above to pause scrolling immediately.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. ARCHITECTURAL BENTO FEATURE SHOWCASE (#features) -->
+    <section id="features" class="section section-divider">
+      <div class="container">
+        <div class="bento-header reveal">
+          <span class="eyebrow-label">Built for real delivery</span>
+          <h2 class="section-title">Everything you need.<br />Nothing you don't.</h2>
+        </div>
+
+        <div class="bento-grid">
+          <!-- ROW 1, CARD A (7 cols, Obsidian Black): Privacy Mode -->
+          <article class="bento-card is-obsidian bento-span-7 reveal">
+            <div class="bento-copy">
+              <span class="bento-tag">Privacy Mode</span>
+              <h3>Hidden from screen capture.</h3>
+              <p>
+                Designed to stay invisible to screen recordings and screen shares. Keep your script visible to your eyes during exams, interviews, meetings, and live demos.
+              </p>
+            </div>
+
+            <div class="micro-ui" aria-hidden="true">
+              <div class="privacy-compare">
+                <div class="mini-screen">
+                  <div class="mini-screen-bar">
+                    <span>MacPrompt</span>
+                    <div class="mini-notch"></div>
+                    <span>10:42</span>
+                  </div>
+                  <div class="mini-screen-body">
+                    <div class="mini-hud">
+                      <div class="mini-hud-line active"></div>
+                      <div class="mini-hud-line"></div>
+                      <div class="mini-hud-line last"></div>
+                    </div>
+                  </div>
+                  <div class="mini-screen-label">Your Display</div>
+                </div>
+
+                <div class="mini-screen">
+                  <div class="mini-screen-bar">
+                    <span style="color:#FF8E5C">REC</span>
+                    <div class="mini-notch"></div>
+                    <span>10:42</span>
+                  </div>
+                  <div class="mini-screen-body">
+                    <div class="mini-hidden-state">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                      </svg>
+                      <span>Hidden</span>
+                    </div>
+                  </div>
+                  <div class="mini-screen-label">Screen Capture</div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- ROW 1, CARD B (5 cols, White): Notch-Native & Menu Bar App -->
+          <article class="bento-card bento-span-5 reveal">
+            <div class="bento-copy">
+              <span class="bento-tag">macOS Utility</span>
+              <h3>Notch-Native &amp; Menu Bar App.</h3>
+              <p>
+                Lives right beneath your MacBook camera in the notch area and runs quietly from your macOS menu bar &mdash; zero Dock clutter.
+              </p>
+            </div>
+
+            <div class="micro-ui" aria-hidden="true">
+              <div class="menubar-demo">
+                <div class="mb-strip">
+                  <span>Finder</span>
+                  <div style="display:flex;align-items:center;gap:8px">
+                    <img src="icon.png" alt="" width="15" height="15" style="border-radius:3px" />
+                    <span style="font-family:var(--font-mono);font-size:9.5px;opacity:0.75">10:42</span>
+                  </div>
+                </div>
+
+                <div class="mb-popover">
+                  <div class="mb-row is-active">
+                    <span>Start Prompt</span>
+                    <span style="font-family:var(--font-mono);font-size:10px">&#9656;</span>
+                  </div>
+                  <div class="mb-row">
+                    <span>Privacy Mode</span>
+                    <span class="mb-pill-on">On</span>
+                  </div>
+                  <div class="mb-row">
+                    <span>Library</span>
+                    <span style="color:var(--ink-muted);font-size:11px">&rsaquo;</span>
+                  </div>
+                </div>
+
+                <div class="dock-strip">
+                  <span>macOS Dock</span>
+                  <div class="dock-icons">
+                    <span></span><span></span><span></span><span></span>
+                  </div>
+                  <span style="font-family:var(--font-mono);font-size:9.5px;color:var(--orange)">No clutter</span>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- ROW 2, CARD C (4 cols): Voice-Coupled & Smooth Auto-Scroll -->
+          <article class="bento-card bento-span-4 reveal">
+            <div class="bento-copy">
+              <span class="bento-tag">Natural Pacing</span>
+              <h3>Voice-Coupled &amp; Smooth Auto-Scroll.</h3>
+              <p>
+                Steady smooth auto-scroll with adjustable speed, or voice-coupled prompting where your speech activity paces the script. Hover over the notch anytime to pause instantly.
+              </p>
+            </div>
+
+            <div class="micro-ui" aria-hidden="true">
+              <div class="voice-card-ui">
+                <div class="voice-wave-box">
+                  <div class="bento-bars">
+                    <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+                  </div>
+                  <span class="speed-chip">1.0&times; Speed</span>
+                </div>
+                <div class="hover-cursor-badge">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--orange)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M5 3l14 9-6.5 1.8L9 20z"></path>
+                  </svg>
+                  <span>Hover to pause</span>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- ROW 2, CARD D (4 cols): Script Library & Local Persistence -->
+          <article class="bento-card bento-span-4 reveal">
+            <div class="bento-copy">
+              <span class="bento-tag">Local Library</span>
+              <h3>Script Library &amp; Local Persistence.</h3>
+              <p>
+                Keep multiple scripts ready in your library with built-in editing and local persistence between sessions. Import and export in TXT, Markdown, RTF, DOCX, ODT, and PDF.
+              </p>
+            </div>
+
+            <div class="micro-ui" aria-hidden="true">
+              <div class="library-ui">
+                <div class="script-mini-list">
+                  <div class="script-mini-row">
+                    <span class="script-mini-left"><span class="script-dot active"></span>Product Keynote</span>
+                    <span class="script-mini-meta">Active</span>
+                  </div>
+                  <div class="script-mini-row">
+                    <span class="script-mini-left"><span class="script-dot"></span>Interview Prep</span>
+                    <span class="script-mini-meta">Saved</span>
+                  </div>
+                  <div class="script-mini-row">
+                    <span class="script-mini-left"><span class="script-dot"></span>Lecture Notes</span>
+                    <span class="script-mini-meta">Saved</span>
+                  </div>
+                </div>
+                <div class="format-pills">
+                  <span class="format-pill">TXT</span>
+                  <span class="format-pill">MD</span>
+                  <span class="format-pill">RTF</span>
+                  <span class="format-pill">DOCX</span>
+                  <span class="format-pill">ODT</span>
+                  <span class="format-pill">PDF</span>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- ROW 2, CARD E (4 cols): Tailored Controls & Multi-Display -->
+          <article class="bento-card bento-span-4 reveal">
+            <div class="bento-copy">
+              <span class="bento-tag">Display Control</span>
+              <h3>Tailored Controls &amp; Multi-Display.</h3>
+              <p>
+                Adjust font size and overlay height for effortless reading at any distance, configure everything in native settings, and run seamlessly across multiple displays.
+              </p>
+            </div>
+
+            <div class="micro-ui" aria-hidden="true">
+              <div class="inspector-ui">
+                <div class="insp-row">
+                  <span>Font Size</span>
+                  <div class="insp-slider">
+                    <div class="insp-slider-fill"></div>
+                    <div class="insp-slider-knob"></div>
+                  </div>
+                </div>
+                <div class="insp-row">
+                  <span>Overlay Height</span>
+                  <div class="height-bars">
+                    <span></span><span></span><span></span>
+                  </div>
+                </div>
+                <div class="display-pills">
+                  <span class="disp-pill is-selected">MacBook Pro</span>
+                  <span class="disp-pill">Display 2</span>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <!-- Complete 13 Core Capabilities Strip (Exact verified repository feature list) -->
+        <div class="capabilities-strip reveal">
+          <div class="capabilities-head">
+            <h3>Complete core capabilities</h3>
+            <span>13 native macOS features included</span>
+          </div>
+          <ul class="capabilities-list">
+            <li>
+              <span class="cap-check" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+              <span><strong>Mac notch teleprompter</strong> in the notch area on supported MacBooks</span>
+            </li>
+            <li>
+              <span class="cap-check" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+              <span><strong>Menu bar app</strong> running quietly without Dock clutter</span>
+            </li>
+            <li>
+              <span class="cap-check" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+              <span><strong>Privacy mode</strong> designed to hide from screen captures &amp; recordings</span>
+            </li>
+            <li>
+              <span class="cap-check" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+              <span><strong>Smooth auto-scroll</strong> with adjustable reading speed</span>
+            </li>
+            <li>
+              <span class="cap-check" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+              <span><strong>Voice-coupled prompting</strong> paced by your speech activity</span>
+            </li>
+            <li>
+              <span class="cap-check" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+              <span><strong>Hover-to-pause</strong> by moving your cursor over the notch</span>
+            </li>
+            <li>
+              <span class="cap-check" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+              <span><strong>Script library</strong> holding multiple prompts and scripts</span>
+            </li>
+            <li>
+              <span class="cap-check" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+              <span><strong>Script import &amp; export</strong> for TXT, Markdown, RTF, DOCX, ODT &amp; PDF</span>
+            </li>
+            <li>
+              <span class="cap-check" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+              <span><strong>Script editor &amp; settings</strong> for creating and managing scripts</span>
+            </li>
+            <li>
+              <span class="cap-check" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+              <span><strong>Local script persistence</strong> saved across sessions on your Mac</span>
+            </li>
+            <li>
+              <span class="cap-check" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+              <span><strong>Adjustable font size</strong> for comfortable reading at any distance</span>
+            </li>
+            <li>
+              <span class="cap-check" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+              <span><strong>Adjustable overlay height</strong> tailored to your script density</span>
+            </li>
+            <li>
+              <span class="cap-check" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+              <span><strong>Multi-display support</strong> across built-in and external monitors</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. USE CASES SECTION (6-CELL HAIRLINE ARCHITECTURAL GRID) -->
+    <section class="section section-divider">
+      <div class="container">
+        <div class="use-cases-header reveal">
+          <span class="eyebrow-label">Where it shines</span>
+          <h2 class="section-title">Built for moments that matter.</h2>
+        </div>
+
+        <div class="use-cases-grid reveal">
+          <article class="use-case-cell">
+            <svg class="use-case-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+              <path d="m9 12 2 2 4-4"></path>
+            </svg>
+            <h3>Exams</h3>
+            <p>Keep essential reference notes visible only to you, hidden from screen capture.</p>
+          </article>
+
+          <article class="use-case-cell">
+            <svg class="use-case-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+              <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
+            <h3>Interviews</h3>
+            <p>Keep your talking points close to the lens without breaking eye contact.</p>
+          </article>
+
+          <article class="use-case-cell">
+            <svg class="use-case-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="2" y="3" width="20" height="14" rx="2"></rect>
+              <line x1="8" y1="21" x2="16" y2="21"></line>
+              <line x1="12" y1="17" x2="12" y2="21"></line>
+            </svg>
+            <h3>Presentations</h3>
+            <p>Deliver structured slides and key beats without glancing down.</p>
+          </article>
+
+          <article class="use-case-cell">
+            <svg class="use-case-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
+            <h3>Meetings</h3>
+            <p>Keep agendas and notes tucked quietly in your menu bar.</p>
+          </article>
+
+          <article class="use-case-cell">
+            <svg class="use-case-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polygon points="23 7 16 12 23 17 23 7"></polygon>
+              <rect x="1" y="5" width="15" height="14" rx="2"></rect>
+            </svg>
+            <h3>Video Recording</h3>
+            <p>Read smoothly right beneath the camera for natural one-take delivery.</p>
+          </article>
+
+          <article class="use-case-cell">
+            <svg class="use-case-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"></path>
+              <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+              <line x1="12" y1="19" x2="12" y2="22"></line>
+            </svg>
+            <h3>Teaching &amp; Podcasts</h3>
+            <p>Pace lessons and outlines cleanly with smooth or voice-coupled scrolling.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. SIMPLE PRICING BAND (#pricing) -->
+    <section id="pricing" class="section section-divider">
+      <div class="container">
+        <div class="pricing-card reveal">
+          <div class="pricing-left">
+            <img src="icon.png" alt="" class="brand-icon" width="46" height="46" />
+            <div>
+              <span class="eyebrow-label" style="margin-bottom:6px">One-time license</span>
+              <h2 class="pricing-title">One app. One payment.</h2>
+              <p class="pricing-copy">
+                Pay once and keep MacPrompt on your Mac. No subscription, no accounts, and local script persistence built in.
+              </p>
+            </div>
+          </div>
+
+          <div class="pricing-right">
+            <span class="price-figure">₹299</span>
+            <a href="#checkout" data-checkout-cta class="btn btn-primary">
+              Get MacPrompt — ₹299
+            </a>
+            <span class="pricing-subtext">Native macOS app &middot; Instant download &middot; No subscription</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. MINIMAL 2-COLUMN FAQ ACCORDION (#faq) -->
+    <section id="faq" class="section section-divider">
+      <div class="container">
+        <div class="faq-header reveal">
+          <span class="eyebrow-label">FAQ</span>
+          <h2 class="section-title">Frequently asked questions.</h2>
+        </div>
+
+        <div class="faq-grid reveal">
+          <!-- Left Column (4 Questions) -->
+          <div class="faq-col">
+            <div class="faq-item">
+              <button type="button" class="faq-trigger" aria-expanded="false" aria-controls="faq-1">
+                <span>What is MacPrompt?</span>
+                <span class="faq-plus" aria-hidden="true"><svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="6" y1="1.5" x2="6" y2="10.5"/><line x1="1.5" y1="6" x2="10.5" y2="6"/></svg></span>
+              </button>
+              <div id="faq-1" class="faq-panel" data-open="false">
+                <div class="faq-panel-inner">
+                  <p class="faq-answer">MacPrompt is a native macOS App that displays your script in the notch area on supported MacBooks and runs quietly from your menu bar so you can read naturally while looking toward your camera.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="faq-item">
+              <button type="button" class="faq-trigger" aria-expanded="false" aria-controls="faq-2">
+                <span>How does Privacy Mode work?</span>
+                <span class="faq-plus" aria-hidden="true"><svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="6" y1="1.5" x2="6" y2="10.5"/><line x1="1.5" y1="6" x2="10.5" y2="6"/></svg></span>
+              </button>
+              <div id="faq-2" class="faq-panel" data-open="false">
+                <div class="faq-panel-inner">
+                  <p class="faq-answer">Privacy Mode is designed to hide the teleprompter overlay from screen captures and screen recordings, keeping your script visible on your display while remaining invisible in shared screens and recordings.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="faq-item">
+              <button type="button" class="faq-trigger" aria-expanded="false" aria-controls="faq-3">
+                <span>Does MacPrompt clutter my Dock?</span>
+                <span class="faq-plus" aria-hidden="true"><svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="6" y1="1.5" x2="6" y2="10.5"/><line x1="1.5" y1="6" x2="10.5" y2="6"/></svg></span>
+              </button>
+              <div id="faq-3" class="faq-panel" data-open="false">
+                <div class="faq-panel-inner">
+                  <p class="faq-answer">No. MacPrompt runs as a dedicated menu bar app rather than a normal Dock app, staying out of your way until you need it.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="faq-item">
+              <button type="button" class="faq-trigger" aria-expanded="false" aria-controls="faq-4">
+                <span>How does voice-coupled prompting work?</span>
+                <span class="faq-plus" aria-hidden="true"><svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="6" y1="1.5" x2="6" y2="10.5"/><line x1="1.5" y1="6" x2="10.5" y2="6"/></svg></span>
+              </button>
+              <div id="faq-4" class="faq-panel" data-open="false">
+                <div class="faq-panel-inner">
+                  <p class="faq-answer">Voice-coupled prompting uses your speech activity to influence scrolling naturally as you speak. You can also switch to smooth auto-scroll with adjustable speed or use hover-to-pause anytime.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column (4 Questions) -->
+          <div class="faq-col">
+            <div class="faq-item">
+              <button type="button" class="faq-trigger" aria-expanded="false" aria-controls="faq-5">
+                <span>Which file formats can I import and export?</span>
+                <span class="faq-plus" aria-hidden="true"><svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="6" y1="1.5" x2="6" y2="10.5"/><line x1="1.5" y1="6" x2="10.5" y2="6"/></svg></span>
+              </button>
+              <div id="faq-5" class="faq-panel" data-open="false">
+                <div class="faq-panel-inner">
+                  <p class="faq-answer">MacPrompt supports importing and exporting scripts in TXT, Markdown, RTF, DOCX, ODT, and PDF formats directly from your script library.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="faq-item">
+              <button type="button" class="faq-trigger" aria-expanded="false" aria-controls="faq-6">
+                <span>Are my scripts saved locally between sessions?</span>
+                <span class="faq-plus" aria-hidden="true"><svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="6" y1="1.5" x2="6" y2="10.5"/><line x1="1.5" y1="6" x2="10.5" y2="6"/></svg></span>
+              </button>
+              <div id="faq-6" class="faq-panel" data-open="false">
+                <div class="faq-panel-inner">
+                  <p class="faq-answer">Yes. MacPrompt includes local script persistence between sessions, keeping your scripts stored on your Mac and ready whenever you open the app.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="faq-item">
+              <button type="button" class="faq-trigger" aria-expanded="false" aria-controls="faq-7">
+                <span>Can I use MacPrompt across multiple displays?</span>
+                <span class="faq-plus" aria-hidden="true"><svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="6" y1="1.5" x2="6" y2="10.5"/><line x1="1.5" y1="6" x2="10.5" y2="6"/></svg></span>
+              </button>
+              <div id="faq-7" class="faq-panel" data-open="false">
+                <div class="faq-panel-inner">
+                  <p class="faq-answer">Yes. MacPrompt includes multi-display support so you can run the teleprompter on your MacBook display or move it to an external monitor.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="faq-item">
+              <button type="button" class="faq-trigger" aria-expanded="false" aria-controls="faq-8">
+                <span>How much does MacPrompt cost? Is it a subscription?</span>
+                <span class="faq-plus" aria-hidden="true"><svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="6" y1="1.5" x2="6" y2="10.5"/><line x1="1.5" y1="6" x2="10.5" y2="6"/></svg></span>
+              </button>
+              <div id="faq-8" class="faq-panel" data-open="false">
+                <div class="faq-panel-inner">
+                  <p class="faq-answer">MacPrompt is a ₹299 one-time purchase. There is no subscription and no recurring charge.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- 8. OBSIDIAN BLACK CLOSING CTA + INTEGRATED MINIMAL FOOTER -->
+  <div class="closing-band">
+    <section class="final-cta" aria-labelledby="final-cta-heading">
+      <div class="container reveal">
+        <h2 id="final-cta-heading" class="final-cta-title">
+          Stop looking away.<br />
+          <span class="accent">Start delivering.</span>
+        </h2>
+        <p class="final-cta-copy">Keep your words right where you look.</p>
+        <div class="final-cta-action">
+          <a href="#checkout" data-checkout-cta class="btn btn-primary">
+            Get MacPrompt — ₹299
+          </a>
+        </div>
+        <p class="final-cta-meta">Native macOS &middot; One-time purchase</p>
+      </div>
+    </section>
+
+    <footer class="site-footer">
+      <div class="container">
+        <div class="footer-top">
+          <div class="footer-brand">
+            <img src="icon.png" alt="" width="24" height="24" style="border-radius:5px" />
+            <span class="footer-brand-name">MacPrompt</span>
+            <span class="footer-tagline">Your words. Right where you look.</span>
+          </div>
+
+          <nav class="footer-links" aria-label="Footer Navigation">
+            <button type="button" data-info-modal="privacy">Privacy</button>
+            <button type="button" data-info-modal="terms">Terms</button>
+            <button type="button" data-info-modal="support">Support</button>
+            <a href="#checkout" data-checkout-cta class="footer-buy">Purchase</a>
+          </nav>
+        </div>
+
+        <div class="footer-bottom">
+          <p>&copy; 2026 MacPrompt. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- CHECKOUT PREVIEW MODAL (Displayed when CHECKOUT_URL is empty) -->
+  <div id="checkout-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="checkout-modal-title">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="checkout-modal-title" class="modal-title">Get MacPrompt</h3>
+        <button type="button" class="modal-close" data-close-modal aria-label="Close checkout dialog">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>
+        </button>
+      </div>
+
+      <div class="checkout-summary">
+        <div class="checkout-product">
+          <img src="icon.png" alt="MacPrompt" class="brand-icon" width="40" height="40" />
+          <div>
+            <div class="checkout-product-name">MacPrompt for macOS</div>
+            <div class="checkout-product-sub">One-time purchase &middot; No subscription</div>
+          </div>
+        </div>
+        <span class="checkout-price">₹299</span>
+      </div>
+
+      <ul class="checkout-list">
+        <li>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+          Mac notch teleprompter &amp; menu bar app
+        </li>
+        <li>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+          Privacy Mode hidden from screen captures
+        </li>
+        <li>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+          Voice-coupled prompting, hover-to-pause &amp; multi-display
+        </li>
+        <li>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+          Local script library (TXT, MD, RTF, DOCX, ODT &amp; PDF)
+        </li>
+      </ul>
+
+      <div class="checkout-note">
+        <strong>Coming Soon!</strong>
+      </div>
+
+      <div class="checkout-modal-footer">
+        <button type="button" class="btn btn-primary btn-sm" data-close-modal>Close Preview</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER INFO MODAL (Privacy / Terms / Support) -->
+  <div id="info-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="info-modal-title">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="info-modal-title" class="modal-title">Information</h3>
+        <button type="button" class="modal-close" data-close-modal aria-label="Close dialog">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>
+        </button>
+      </div>
+      <div id="info-modal-body" class="modal-body"></div>
+    </div>
+  </div>
+
+  <!-- ZERO-DEPENDENCY VANILLA JAVASCRIPT -->
+  <script>
+    (function () {
+      'use strict';
+
+      /**
+       * CHECKOUT CONFIGURATION
+       * Paste your live Razorpay, Gumroad, LemonSqueezy, or Stripe payment URL below.
+       * When populated with an http(s) URL, every "Get MacPrompt — ₹299" and "Purchase"
+       * CTA redirects straight to checkout. When empty, a clean checkout preview opens.
+       */
+      const CHECKOUT_URL = "";
+
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      /* ---------------------------------------------------------------------
+         1. ACCESSIBLE MODAL MANAGER (Escape, Backdrop Click, Focus Restore)
+      --------------------------------------------------------------------- */
+      let activeModal = null;
+      let previouslyFocused = null;
+
+      function openModal(modal) {
+        if (!modal) return;
+        previouslyFocused = document.activeElement;
+        activeModal = modal;
+        modal.classList.add('is-open');
+        const closeBtn = modal.querySelector('[data-close-modal]');
+        if (closeBtn) closeBtn.focus();
+      }
+
+      function closeModal() {
+        if (!activeModal) return;
+        activeModal.classList.remove('is-open');
+        activeModal = null;
+        if (previouslyFocused && typeof previouslyFocused.focus === 'function') {
+          previouslyFocused.focus();
+        }
+      }
+
+      document.querySelectorAll('[data-close-modal]').forEach((btn) => {
+        btn.addEventListener('click', closeModal);
+      });
+
+      document.querySelectorAll('.modal-backdrop').forEach((backdrop) => {
+        backdrop.addEventListener('click', (event) => {
+          if (event.target === backdrop) closeModal();
+        });
+      });
+
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && activeModal) closeModal();
+      });
+
+      /* ---------------------------------------------------------------------
+         2. CHECKOUT CTA WIRING
+      --------------------------------------------------------------------- */
+      const checkoutModal = document.getElementById('checkout-modal');
+      const liveCheckoutUrl = CHECKOUT_URL.trim();
+      const hasLiveCheckout = /^https?:\/\//i.test(liveCheckoutUrl);
+
+      document.querySelectorAll('[data-checkout-cta]').forEach((cta) => {
+        if (hasLiveCheckout) {
+          cta.setAttribute('href', liveCheckoutUrl);
+          cta.setAttribute('target', '_blank');
+          cta.setAttribute('rel', 'noopener noreferrer');
+        } else {
+          cta.addEventListener('click', (event) => {
+            event.preventDefault();
+            openModal(checkoutModal);
+          });
+        }
+      });
+
+      /* ---------------------------------------------------------------------
+         3. FOOTER INFO MODAL SHEETS (Privacy / Terms / Support)
+      --------------------------------------------------------------------- */
+      const INFO_SHEETS = {
+        privacy: {
+          title: 'Privacy',
+          paragraphs: [
+            'MacPrompt runs natively on your Mac with local script persistence between sessions, keeping your scripts stored locally on your machine.',
+            'Privacy Mode is designed to hide the teleprompter overlay from screen captures and recordings. Microphone access is only used if you enable voice-coupled prompting.'
+          ]
+        },
+        terms: {
+          title: 'Terms',
+          paragraphs: [
+            'MacPrompt is offered as a single ₹299 one-time purchase for macOS with no recurring subscription fees.',
+            'Your purchase provides instant download access to the native macOS application under the license terms shown during checkout.'
+          ]
+        },
+        support: {
+          title: 'Support',
+          paragraphs: [
+            'Need assistance with MacPrompt notch placement, Privacy Mode, script import/export (TXT, Markdown, RTF, DOCX, ODT, PDF), or multi-display setup?',
+            'Direct support contact details and setup guidance are delivered alongside your purchase confirmation and download link.'
+          ]
+        }
+      };
+
+      const infoModal = document.getElementById('info-modal');
+      const infoTitle = document.getElementById('info-modal-title');
+      const infoBody = document.getElementById('info-modal-body');
+
+      document.querySelectorAll('[data-info-modal]').forEach((trigger) => {
+        trigger.addEventListener('click', () => {
+          const sheet = INFO_SHEETS[trigger.getAttribute('data-info-modal')];
+          if (!sheet) return;
+          infoTitle.textContent = sheet.title;
+          infoBody.innerHTML = '';
+          sheet.paragraphs.forEach((copy) => {
+            const p = document.createElement('p');
+            p.textContent = copy;
+            infoBody.appendChild(p);
+          });
+          openModal(infoModal);
+        });
+      });
+
+      /* ---------------------------------------------------------------------
+         4. INTERACTIVE MACBOOK PRO NOTCH SHOWCASE ENGINE
+      --------------------------------------------------------------------- */
+      const overlayEl = document.getElementById('prompter-overlay');
+      const viewportEl = document.getElementById('overlay-viewport');
+      const trackEl = document.getElementById('overlay-track');
+      const scriptEl = document.getElementById('overlay-script');
+      const modeTextEl = document.getElementById('overlay-mode-text');
+      const voiceMeterEl = document.getElementById('overlay-voice-meter');
+      const voiceBars = document.querySelectorAll('#overlay-voice-meter .voice-bar');
+      const speedReadoutEl = document.getElementById('overlay-speed-readout');
+      const recPillEl = document.getElementById('mac-rec-pill');
+      const mpTrayEl = document.getElementById('mac-mp-tray');
+      const captureBadgeEl = document.getElementById('capture-hidden-badge');
+
+      const btnYourView = document.getElementById('btn-your-view');
+      const btnScreenCapture = document.getElementById('btn-screen-capture');
+      const btnModeAuto = document.getElementById('btn-mode-auto');
+      const btnModeVoice = document.getElementById('btn-mode-voice');
+      const btnPlay = document.getElementById('btn-play');
+      const icPause = document.getElementById('ic-pause');
+      const icPlay = document.getElementById('ic-play');
+      const lblPlay = document.getElementById('lbl-play');
+      const btnSpeed = document.getElementById('btn-speed');
+      const btnFontDec = document.getElementById('btn-font-dec');
+      const btnFontInc = document.getElementById('btn-font-inc');
+      const btnHeight = document.getElementById('btn-height');
+      const lblHeight = document.getElementById('lbl-height');
+
+      const SPEEDS = [0.8, 1.0, 1.4];
+      const HEIGHTS = [
+        { key: 'compact', label: 'Compact' },
+        { key: 'standard', label: 'Standard' },
+        { key: 'tall', label: 'Tall' }
+      ];
+
+      const state = {
+        screenCaptureHidden: false,
+        voiceCoupled: false,
+        playing: !reducedMotion,
+        hoverPaused: false,
+        speedIdx: 1, // 1.0x
+        fontSize: 15, // 13px .. 19px
+        heightIdx: 1, // Standard
+        scrollY: 0
+      };
+
+      function syncShowcaseUI() {
+        // Privacy Mode (Your View vs Screen Capture)
+        btnYourView.setAttribute('aria-pressed', String(!state.screenCaptureHidden));
+        btnScreenCapture.setAttribute('aria-pressed', String(state.screenCaptureHidden));
+        overlayEl.classList.toggle('is-hidden-capture', state.screenCaptureHidden);
+        recPillEl.classList.toggle('is-active', state.screenCaptureHidden);
+        captureBadgeEl.classList.toggle('is-visible', state.screenCaptureHidden);
+        if (mpTrayEl) mpTrayEl.style.opacity = state.screenCaptureHidden ? '0.35' : '1';
+
+        // Scroll Mode (Auto-Scroll vs Voice-Coupled)
+        btnModeAuto.setAttribute('aria-pressed', String(!state.voiceCoupled));
+        btnModeVoice.setAttribute('aria-pressed', String(state.voiceCoupled));
+        modeTextEl.textContent = state.voiceCoupled ? 'Voice-Coupled' : 'Auto-Scroll';
+        voiceMeterEl.classList.toggle('is-live', state.voiceCoupled && state.playing && !state.hoverPaused);
+
+        // Hover-to-Pause visual state
+        overlayEl.classList.toggle('is-hover-paused', state.hoverPaused);
+
+        // Play / Pause button
+        btnPlay.setAttribute('aria-pressed', String(state.playing));
+        icPause.style.display = state.playing ? '' : 'none';
+        icPlay.style.display = state.playing ? 'none' : '';
+        lblPlay.textContent = state.playing ? 'Pause' : 'Play';
+
+        // Speed display
+        const speedText = SPEEDS[state.speedIdx].toFixed(1) + '\u00d7';
+        btnSpeed.textContent = speedText;
+        speedReadoutEl.textContent = speedText;
+
+        // Font Size
+        scriptEl.style.fontSize = state.fontSize + 'px';
+
+        // Overlay Height
+        const heightObj = HEIGHTS[state.heightIdx];
+        viewportEl.setAttribute('data-height', heightObj.key);
+        lblHeight.textContent = heightObj.label;
+      }
+
+      // Real Hover-to-Pause on the live notch overlay
+      overlayEl.addEventListener('mouseenter', () => {
+        state.hoverPaused = true;
+        syncShowcaseUI();
+      });
+
+      overlayEl.addEventListener('mouseleave', () => {
+        state.hoverPaused = false;
+        syncShowcaseUI();
+      });
+
+      // Control Dock Event Listeners
+      btnYourView.addEventListener('click', () => {
+        state.screenCaptureHidden = false;
+        syncShowcaseUI();
+      });
+
+      btnScreenCapture.addEventListener('click', () => {
+        state.screenCaptureHidden = true;
+        syncShowcaseUI();
+      });
+
+      btnModeAuto.addEventListener('click', () => {
+        state.voiceCoupled = false;
+        syncShowcaseUI();
+      });
+
+      btnModeVoice.addEventListener('click', () => {
+        state.voiceCoupled = true;
+        syncShowcaseUI();
+      });
+
+      btnPlay.addEventListener('click', () => {
+        state.playing = !state.playing;
+        syncShowcaseUI();
+      });
+
+      btnSpeed.addEventListener('click', () => {
+        state.speedIdx = (state.speedIdx + 1) % SPEEDS.length;
+        syncShowcaseUI();
+      });
+
+      btnFontDec.addEventListener('click', () => {
+        state.fontSize = Math.max(13, state.fontSize - 1);
+        syncShowcaseUI();
+      });
+
+      btnFontInc.addEventListener('click', () => {
+        state.fontSize = Math.min(19, state.fontSize + 1);
+        syncShowcaseUI();
+      });
+
+      btnHeight.addEventListener('click', () => {
+        state.heightIdx = (state.heightIdx + 1) % HEIGHTS.length;
+        syncShowcaseUI();
+      });
+
+      // Smooth Animation Loop (Auto-Scroll + Organic Voice-Coupled Cadence)
+      let prevTime = performance.now();
+      let meterTick = 0;
+
+      function tickPrompter(now) {
+        const dt = Math.min((now - prevTime) / 1000, 0.1);
+        prevTime = now;
+
+        const isActivelyMoving = state.playing && !state.hoverPaused && !state.screenCaptureHidden;
+
+        if (isActivelyMoving && trackEl && viewportEl) {
+          const basePxPerSec = 20 * SPEEDS[state.speedIdx];
+          let velocity = basePxPerSec;
+
+          // Voice-coupled mode modulates cadence organically like natural spoken phrases
+          if (state.voiceCoupled) {
+            const cadence = 0.55 + 0.65 * Math.max(0, Math.sin(now * 0.0024) * 0.65 + 0.55 * Math.sin(now * 0.0061));
+            velocity = basePxPerSec * cadence;
+
+            meterTick += dt;
+            if (meterTick >= 0.11) {
+              meterTick = 0;
+              voiceBars.forEach((bar, i) => {
+                const energy = Math.abs(Math.sin(now * 0.007 + i * 1.4)) * cadence;
+                const h = Math.max(3, Math.min(11, Math.round(3 + energy * 8.5)));
+                bar.style.height = h + 'px';
+              });
+            }
+          } else {
+            voiceBars.forEach((bar) => { bar.style.height = '3px'; });
+          }
+
+          const maxScroll = Math.max(24, trackEl.scrollHeight - viewportEl.clientHeight + 28);
+          state.scrollY += velocity * dt;
+          if (state.scrollY > maxScroll) {
+            state.scrollY = 0;
+          }
+          trackEl.style.transform = 'translate3d(0,' + (-state.scrollY).toFixed(1) + 'px,0)';
+        } else {
+          voiceBars.forEach((bar) => { bar.style.height = '3px'; });
+        }
+
+        requestAnimationFrame(tickPrompter);
+      }
+
+      syncShowcaseUI();
+      requestAnimationFrame(tickPrompter);
+
+      /* ---------------------------------------------------------------------
+         5. ACCESSIBLE 2-COLUMN FAQ ACCORDION
+      --------------------------------------------------------------------- */
+      const faqTriggers = document.querySelectorAll('.faq-trigger');
+      faqTriggers.forEach((trigger) => {
+        trigger.addEventListener('click', () => {
+          const targetId = trigger.getAttribute('aria-controls');
+          const panel = document.getElementById(targetId);
+          const currentlyOpen = trigger.getAttribute('aria-expanded') === 'true';
+
+          faqTriggers.forEach((other) => {
+            if (other !== trigger) {
+              other.setAttribute('aria-expanded', 'false');
+              const otherPanel = document.getElementById(other.getAttribute('aria-controls'));
+              if (otherPanel) otherPanel.setAttribute('data-open', 'false');
+            }
+          });
+
+          trigger.setAttribute('aria-expanded', String(!currentlyOpen));
+          if (panel) panel.setAttribute('data-open', String(!currentlyOpen));
+        });
+      });
+
+      /* ---------------------------------------------------------------------
+         6. SUBTLE SCROLL REVEAL (IntersectionObserver)
+      --------------------------------------------------------------------- */
+      const revealEls = document.querySelectorAll('.reveal');
+      if (!reducedMotion && 'IntersectionObserver' in window) {
+        const observer = new IntersectionObserver(
+          (entries, obs) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('is-visible');
+                obs.unobserve(entry.target);
+              }
+            });
+          },
+          { threshold: 0.1, rootMargin: '0px 0px -24px 0px' }
+        );
+        revealEls.forEach((el) => observer.observe(el));
+      } else {
+        revealEls.forEach((el) => el.classList.add('is-visible'));
+      }
+      /* ---------------------------------------------------------------------
+         7. MOBILE HAMBURGER MENU TOGGLE
+      --------------------------------------------------------------------- */
+      const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+      const navLinksEl = document.getElementById('nav-links');
+      const navbarEl = document.querySelector('.navbar');
+
+      function setMobileMenuOpen(open) {
+        if (!mobileMenuBtn || !navLinksEl) return;
+        mobileMenuBtn.setAttribute('aria-expanded', String(open));
+        navLinksEl.classList.toggle('is-mobile-open', open);
+      }
+
+      if (mobileMenuBtn && navLinksEl) {
+        mobileMenuBtn.addEventListener('click', (event) => {
+          event.stopPropagation();
+          const isOpen = mobileMenuBtn.getAttribute('aria-expanded') === 'true';
+          setMobileMenuOpen(!isOpen);
+        });
+
+        // Close mobile menu when a nav link is clicked
+        navLinksEl.querySelectorAll('.nav-link').forEach((link) => {
+          link.addEventListener('click', () => setMobileMenuOpen(false));
+        });
+
+        // Close mobile menu when clicking outside navbar or pressing Escape
+        document.addEventListener('click', (event) => {
+          if (navbarEl && !navbarEl.contains(event.target)) {
+            setMobileMenuOpen(false);
+          }
+        });
+
+        document.addEventListener('keydown', (event) => {
+          if (event.key === 'Escape') setMobileMenuOpen(false);
+        });
+
+        window.addEventListener('resize', () => {
+          if (window.innerWidth >= 880) setMobileMenuOpen(false);
+        });
+      }
+
+    })();
+  </script>
+</body>
+</html>
