@@ -1,6 +1,6 @@
 <div align="center">
-
 <img src="icon.png" alt="MacPrompt" width="120">
+  <img src="MacPrompt_%20Your%20Words%2C%20Right%20Where%20You%20Look%20(1).png" alt="MacPrompt">
 </div>
 
 # MacPrompt
